@@ -90,17 +90,21 @@ std::pair<bool, GLfloat> Collider::checkHit(glm::vec3 pos, glm::vec3 nextPos,glm
 		if (dist > rad + EPSILON) {
 			return std::make_pair(false, -1);
 		}
-		
+		//GLfloat dist1 = glm::length(glm::dot(this->center - pos, this->norm));
+		//if (dist1 < rad + EPSILON) {
+		//	return std::make_pair(true, 0);
+		//}
 
 		//GLfloat thit = glm::dot((this->center - pos + this->norm * rad), this->norm) / glm::dot(vel, this->norm);
-		GLfloat thit = (glm::dot((this->center - pos ), this->norm)+rad) / glm::dot(vel, this->norm);
+		GLfloat thit = (glm::dot((this->center - pos ), this->norm)+rad+EPSILON ) / glm::dot(vel, this->norm);
 		//if (thit < (1 / DEFAULT_SIMRATE + EPSILON) && thit > 0) {
 
 			glm::vec3 xhit = pos - this->norm * rad + thit * vel;
 			glm::vec2 xhitTD;
 			std::vector<glm::vec2> pjtPoint;
 			//project to 2D
-			if (std::abs(this->norm.x) > std::abs(this->norm.y) && std::abs(this->norm.x) > std::abs(this->norm.z)) {
+			if (std::abs(this->norm.x) > std::abs(this->norm.y) && 
+				std::abs(this->norm.x) > std::abs(this->norm.z)) {
 				for (int i = 0; i < positions.size(); i++) {
 					pjtPoint.push_back(glm::vec2(positions[i].y, positions[i].z));
 				}

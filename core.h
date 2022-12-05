@@ -24,7 +24,7 @@
 #include <iostream>
 
 //Miscs
-#define EPSILON 1e-5f
+#define EPSILON 1e-4f
 #define TOLERANCE 0.01f
 #define POINT_SIZE 1.0f
 
