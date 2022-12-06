@@ -16,31 +16,77 @@ using namespace std;
 class Pedal : public Object
 {
 private:
+
+	//render datas
 	std::vector<glm::vec3> points;
+	std::vector<glm::vec3> localPos;
 	std::vector<glm::vec3> normals;
 	std::vector<glm::ivec3> faces;
+	std::vector<std::pair<int, int>> edges;
+	std::vector<std::pair<glm::vec3, glm::vec3>> obtedges;
+
+	//renders	
 	GLuint VAO, VBOvertex, VBOnormal, EBO;
-	GLfloat pointSize;
-	glm::vec3 center;
-	bool shadeForLight;
-	std::vector<Plain*> plains;
+
+	//centers
+	glm::vec3 massCenter;
+	glm::mat3 rotMat;
+	glm::quat rotQuat;
+	int state = 0;//0 is resting, 1 is moving up, 2 is holding, 3 is moving down
+
+	//collision
+	std::vector<Plain*> colliders;
+	GLfloat elastic;
+	
+	//animation
+	GLfloat moveDegree = 0.0f;
+	GLfloat moveLimit = 30.0f;
+	GLfloat moveDuration = 0.25f;
+
+	//3 dimension
+	GLfloat xMax;
+	GLfloat xMin;
+	GLfloat yMax;
+	GLfloat yMin;
+	GLfloat zMax;
+	GLfloat zMin;
 
 
 public:
-	Pedal(std::string objFilename, GLfloat pointSize);
+	Pedal(glm::vec3 initPos, GLfloat initSpin,bool flip);
 	~Pedal();
 
 	void draw(const glm::mat4& viewProjMtx, GLuint shader);
+	void update(GLfloat deltaTime);
 	void update();
 
-	void updatePointSize(GLfloat size);
 	void spin(float angle, glm::vec3 axis);
+	void spinPerVetex(float angle, glm::vec3 axis);
 	void objParser(string objFilename);
-	void scale(float level);
+	void scale(float xlevel, float ylevel, float zlevel);
 	void translation(glm::vec3 destination);
-	glm::vec3 getCenter();
-	void setCenter(glm::vec3 center);
-	std::vector<Plain*> getPlains() { return this->plains; }
+	void translationPerVertex(glm::vec3 destination);
+	void moveToWorldCenter();
+
+	//getter
+	glm::vec3 GetMassCenter() { return this->massCenter; }
+
+	GLfloat	GetXMax() { return this->xMax; }
+	GLfloat	GetXMin() { return this->xMin; }
+	GLfloat	GetYMax() { return this->yMax; }
+	GLfloat	GetYMin() { return this->yMin; }
+	GLfloat	GetZMax() { return this->zMax; }
+	GLfloat	GetZMin() { return this->zMin; }
+
+	std::vector<glm::vec3> localToWorld(glm::vec3 massCenter, glm::mat3 rotMat);
+	void setCollider(std::vector<Plain*> val) { this->colliders = val; }
+	void setRotationMatrix(glm::mat3 val) { this->rotMat = val* this->rotMat ; }
+	void setState(int val) { this->state = val; }
+
+	void moveStick(GLfloat deltaTime);
+
+	void restoreDefault();
+	void updateThreeDegree();
 
 };
 

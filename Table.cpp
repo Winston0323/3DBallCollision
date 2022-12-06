@@ -42,7 +42,7 @@ Table::Table(GLfloat width,GLfloat length, glm::vec3 origin)
 	wallIncline = new Plain(4,4,5,wallInclineOrigin, true ,glm::vec3(0.9f, 0.9f, 0.5f));
 	plains.push_back(wallIncline);
 	addCollider(wallIncline);
-	//wall left corner incline
+	//Bottom incline walls
 	glm::vec3 wallInclineBtmLftOrigin = glm::vec3(this->origin.x + length / 2-2, this->origin.y - width / 2 + 3 + 2.5, this->origin.z);
 	//wallIncline = new Plain(4, 4, wallInclineOrigin, glm::vec3(1, 1, 0), glm::vec3(0.9f, 0.9f, 0.5f));
 	wallInclineBtmLft = new Plain(4, 2, 5, wallInclineBtmLftOrigin, false, glm::vec3(0.9f, 0.9f, 0.5f));
@@ -55,7 +55,7 @@ Table::Table(GLfloat width,GLfloat length, glm::vec3 origin)
 	plains.push_back(wallInclineBtmRit);
 	addCollider(wallInclineBtmRit);
 
-
+	
 	//Bounce balls
 	glm::vec3 ballOrigin1 = glm::vec3(-18,10,0);
 	bounceBall1 = new BounceBall(ballOrigin1, 1.5);
@@ -73,6 +73,13 @@ Table::Table(GLfloat width,GLfloat length, glm::vec3 origin)
 	bounceBall3 = new BounceBall(ballOrigin3, 1);
 	bbs.push_back(bounceBall3);
 	colliders.push_back(bounceBall3->GetCollider());
+	
+	//pedals
+	pedalLeft = new Pedal(glm::vec3(this->origin.x + length / 2-1, this->origin.y - width / 2 + 3 + 5, this->origin.z),0,false);
+	pedalLeft->setRotationMatrix(glm::rotate(glm::radians(-15.0f), glm::vec3(0, 0, 1)));
+	//pedalLeft = new Pedal(glm::vec3(0),0,true);
+	pedalRight = new Pedal(glm::vec3(this->origin.x + length / 2 - 1, this->origin.y + width / 2 - 5, this->origin.z), 0, true);
+	pedalRight->setRotationMatrix(glm::rotate(glm::radians(15.0f), glm::vec3(0,0,1)));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -91,16 +98,19 @@ void Table::draw(const glm::mat4& viewProjMtx, GLuint shader)
 	for (BounceBall* bb : bbs) {
 		bb->draw(viewProjMtx, shader);
 	}
+	pedalLeft->draw(viewProjMtx, shader);
+	pedalRight->draw(viewProjMtx, shader);
 }
-void Table::update() {
+void Table::update(GLfloat deltaTime) {
 	//for (Plain* p : plains) {
 	//	p->renderUpdate();
 	//
 	//}
 	for (BounceBall* bb : bbs) {
 		bb->renderUpdate();
-	
 	}
+	pedalLeft->update(deltaTime);
+	pedalRight->update(deltaTime);
 
 }
 void Table::addCollider(Plain* plain) {

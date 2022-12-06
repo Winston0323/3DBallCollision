@@ -1,64 +1,21 @@
-#include "Pedal.h"
+﻿#include "Pedal.h"
 
 
-Pedal::Pedal(std::string objFilename, GLfloat pointSize)
-	: pointSize(pointSize)
+Pedal::Pedal(glm::vec3 initPos, GLfloat initSpin,bool flip)
 {
-	this->color = glm::vec3(0.3, 0.3, 0.4);
-	/*
-	 * TODO: Section 2: Currently, all the points are hard coded below.
-	 * Modify this to read points from an obj file.
-	 */
-	objParser(objFilename);
-
-	/*
-	 * TODO: Section 4, you will need to normalize the object to fit in the
-	 * screen.
-	 */
-	std::vector<GLfloat> xCord;
-	std::vector<GLfloat> yCord;
-	std::vector<GLfloat> zCord;
-	for (int i = 0; i < points.size(); i++) {
-
-		xCord.push_back(points[i].x);
-		yCord.push_back(points[i].y);
-		zCord.push_back(points[i].z);
-
+	string objFilename ="";
+	if (flip) {
+		objFilename = "obj/coneflip.obj";
 	}
-	GLfloat midX = (*std::max_element(xCord.begin(), xCord.end()) + *std::min_element(xCord.begin(), xCord.end())) / 2;
-	GLfloat midY = (*std::max_element(yCord.begin(), yCord.end()) + *std::min_element(yCord.begin(), yCord.end())) / 2;
-	GLfloat midZ = (*std::max_element(zCord.begin(), zCord.end()) + *std::min_element(zCord.begin(), zCord.end())) / 2;
-	GLfloat maxDist = 0;
-	this->center = glm::vec3(midX, midY, midZ);
-	glm::vec3 maxPoint(0, 0, 0);
-	for (int i = 0; i < points.size(); i++) {
-
-		points[i].x = points[i].x - midX;
-		points[i].y = points[i].y - midY;
-		points[i].z = points[i].z - midZ;
-		GLfloat temp = pow(points[i].x, 2) + pow(points[i].y, 2) + pow(points[i].z, 2);
-		if (temp > maxDist) {
-			maxDist = temp;
-			maxPoint = points[i];
-		}
+	else {
+		objFilename = "obj/cone.obj";
 	}
-	maxDist = sqrt(maxDist);
-	for (int i = 0; i < points.size(); i++) {
-
-		points[i].x = points[i].x / maxDist * 10 * 0.5;
-		points[i].y = points[i].y / maxDist * 10 * 0.5;
-		points[i].z = points[i].z / maxDist * 10 * 0.5;
-
-	}
-
-
-	// Set the model matrix to an identity matrix. 
-	model = glm::mat4(1);
-
-	//set the shade for light to default value
-	shadeForLight = false;
-
-	// Generate a Vertex Array (VAO) and Vertex Buffer Object (VBO)
+	
+	objParser(objFilename);//setup render data
+	spinPerVetex(initSpin,glm::vec3(0,0,1));
+	restoreDefault();//setup constance
+	moveToWorldCenter();//correct render data
+	translationPerVertex(initPos);
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBOvertex);
 	glGenBuffers(1, &VBOnormal);
@@ -103,39 +60,61 @@ Pedal::~Pedal()
 void Pedal::draw(const glm::mat4& viewProjMtx, GLuint shader)
 {
 	// actiavte the shader program 
+	glDisable(GL_CULL_FACE);
 	glUseProgram(shader);
-
 	// get the locations and send the uniforms to the shader 
 	glUniformMatrix4fv(glGetUniformLocation(shader, "viewProj"), 1, false, (float*)&viewProjMtx);
 	glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_FALSE, (float*)&model);
 	glUniform3fv(glGetUniformLocation(shader, "DiffuseColor"), 1, &color[0]);
+	glUniform4fv(glGetUniformLocation(shader, "astColor"), 1, glm::value_ptr(this->color));
 
 	// Bind the VAO
 	glBindVertexArray(VAO);
 
+	// Bind VBO to the bound VAO, and store the point data
+	glBindBuffer(GL_ARRAY_BUFFER, VBOvertex);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * points.size(), points.data(), GL_STATIC_DRAW);
+	// Enable Vertex Attribute 0 to pass point data through to the shader
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), 0);
+
+
+	// Bind VBO to the bound VAO, and store the normal data
+	glBindBuffer(GL_ARRAY_BUFFER, VBOnormal);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * normals.size(), normals.data(), GL_STATIC_DRAW);
+	// Enable Vertex Attribute 0 to pass point data through to the shader
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), 0);
+
 	// draw the points using triangles, indexed with the EBO
-	//glDrawElements(GL_TRIANGLES, faces.size(), GL_UNSIGNED_INT,0);
 	glDrawElements(GL_TRIANGLES, faces.size() * 3, GL_UNSIGNED_INT, 0);
+
+	//// Set point size
+	//glPointSize(1);
+	//// Draw the points 
+	//glDrawArrays(GL_POINTS, 0, points.size());
 
 	// Unbind the VAO and shader program
 	glBindVertexArray(0);
 	glUseProgram(0);
 }
 
-void Pedal::update()
+void Pedal::update(GLfloat deltaTime)
 {
-	//spin(0.1f);
+	this->points = localToWorld(this->massCenter, this->rotMat);
+	if (state == 1) {
+		//std::cout << "Moving Up" << std::endl;
+		moveStick(deltaTime);
+	}else if (state == 3) {
+		//std::cout << "Moving down" << std::endl;
+		moveStick(-deltaTime);
+	}
+	
 }
 
-void Pedal::updatePointSize(GLfloat size)
+void Pedal::update()
 {
-	int afterSize = size + this->pointSize;
-	if (afterSize < 1) {
-		this->pointSize = 1;
-	}
-	else {
-		this->pointSize = afterSize;
-	}
+	this->points = localToWorld(this->massCenter, this->rotMat);
 }
 
 void Pedal::spin(float angle, glm::vec3 axis)
@@ -144,13 +123,30 @@ void Pedal::spin(float angle, glm::vec3 axis)
 	model = glm::rotate(glm::radians(angle), axis) * model;
 
 }
-void Pedal::scale(float level)
+void Pedal::spinPerVetex(float angle, glm::vec3 axis)
 {
-	model = glm::scale(glm::mat4(1.0f), glm::vec3(level)) * model;
+	// Update the model matrix by multiplying a rotation matrix
+	for (int i = 0; i < points.size(); i++) {
+		this->points[i] = glm::vec3(glm::rotate(glm::radians(angle), axis) * glm::vec4(this->points[i], 1.0f));
+	}
+}
+void Pedal::scale(float xlevel, float ylevel, float zlevel)
+{
+	for (int i = 0; i < points.size(); i++) {
+		this->points[i].x = this->points[i].x * xlevel;
+		this->points[i].y = this->points[i].y * ylevel;
+		this->points[i].z = this->points[i].z * zlevel;
+	}
 }
 void Pedal::translation(glm::vec3 destination)
 {
+	//move the masss center to the destination point
+	this->massCenter = glm::vec3(destination);
 	model = glm::translate(glm::mat4(1.0f), destination);
+}
+void Pedal::translationPerVertex(glm::vec3 destination)
+{
+	this->massCenter = glm::vec3(destination);
 }
 
 void Pedal::objParser(string objFilename)
@@ -159,7 +155,6 @@ void Pedal::objParser(string objFilename)
 	std::vector<glm::vec3> points;
 	std::vector<glm::vec3> normals;
 	std::vector<glm::ivec3> faces;
-
 
 	// Check whether the file can be opened.
 	if (objFile.is_open())
@@ -211,9 +206,10 @@ void Pedal::objParser(string objFilename)
 				face.y = yCord;
 				face.z = zCord;
 				faces.push_back(face);
-
 			}
 		}
+
+		//update points normals and faces
 		this->points = points;
 		this->normals = normals;
 		this->faces = faces;
@@ -224,12 +220,104 @@ void Pedal::objParser(string objFilename)
 	}
 	objFile.close();
 }
+void Pedal::moveToWorldCenter() {
+	std::vector<GLfloat> xCord;
+	std::vector<GLfloat> yCord;
+	std::vector<GLfloat> zCord;
+	for (int i = 0; i < points.size(); i++) {
+		xCord.push_back(this->points[i].x);
+		yCord.push_back(this->points[i].y);
+		zCord.push_back(this->points[i].z);
+	}
 
-void Pedal::setCenter(glm::vec3 center)
-{
-	this->center = center;
+	GLfloat midX = (*std::max_element(xCord.begin(), xCord.end()) + *std::min_element(xCord.begin(), xCord.end())) / 2;
+	GLfloat midY = (*std::max_element(yCord.begin(), yCord.end()) + *std::min_element(yCord.begin(), yCord.end())) / 2;
+	GLfloat midZ = (*std::max_element(zCord.begin(), zCord.end()) + *std::min_element(zCord.begin(), zCord.end())) / 2;
+	//initialize
+
+	for (int i = 0; i < points.size(); i++) {
+
+		points[i].x = points[i].x - midX;
+		points[i].y = points[i].y - midY;
+		points[i].z = points[i].z - midZ;
+	}
+	scale(0.4,1,0.3);
+
+	this->massCenter = this->points[28];
+
+	for (int i = 0; i < points.size(); i++) {
+
+		points[i].x = points[i].x - this->massCenter.x;
+		points[i].y = points[i].y - this->massCenter.y;
+		points[i].z = points[i].z - this->massCenter.z;
+	}
+
+	std::vector<GLfloat> xCord1;
+	std::vector<GLfloat> yCord1;
+	std::vector<GLfloat> zCord1;
+	for (int i = 0; i < points.size(); i++) {
+		xCord1.push_back(this->points[i].x);
+		yCord1.push_back(this->points[i].y);
+		zCord1.push_back(this->points[i].z);
+	}
+	//get the three size of the rigid body
+	this->xMax = *std::max_element(xCord1.begin(), xCord1.end());
+	this->xMin = *std::min_element(xCord1.begin(), xCord1.end());
+	this->yMax = *std::max_element(yCord1.begin(), yCord1.end());
+	this->yMin = *std::min_element(yCord1.begin(), yCord1.end());
+	this->zMax = *std::max_element(zCord1.begin(), zCord1.end());
+	this->zMin = *std::min_element(zCord1.begin(), zCord1.end());
+	for (int i = 0; i < points.size(); i++) {
+
+		//glm::vec3 localCord = glm::vec3(points[i].x - this->massCenter.x,
+		//	points[i].y - this->massCenter.y, points[i].z - this->massCenter.z);
+		glm::vec3 localCord = points[i];
+		this->localPos.push_back(localCord);
+
+	}
+	this->massCenter = glm::vec3(0);
 }
-glm::vec3 Pedal::getCenter()
-{
-	return this->center;
+
+std::vector<glm::vec3> Pedal::localToWorld(glm::vec3 massCenter, glm::mat3 rotMat) {
+
+	std::vector<glm::vec3> worldPos;
+	for (int i = 0; i < points.size(); i++) {
+		worldPos.push_back(massCenter + rotMat * this->localPos[i]);
+	}
+
+	return worldPos;
+}
+void Pedal::updateThreeDegree() {
+	std::vector<GLfloat> xCord1;
+	std::vector<GLfloat> yCord1;
+	std::vector<GLfloat> zCord1;
+	for (int i = 0; i < points.size(); i++) {
+		xCord1.push_back(this->points[i].x);
+		yCord1.push_back(this->points[i].y);
+		zCord1.push_back(this->points[i].z);
+	}
+	//get the three size of the rigid body
+	this->xMax = *std::max_element(xCord1.begin(), xCord1.end());
+	this->xMin = *std::min_element(xCord1.begin(), xCord1.end());
+	this->yMax = *std::max_element(yCord1.begin(), yCord1.end());
+	this->yMin = *std::min_element(yCord1.begin(), yCord1.end());
+	this->zMax = *std::max_element(zCord1.begin(), zCord1.end());
+	this->zMin = *std::min_element(zCord1.begin(), zCord1.end());
+}
+
+
+void Pedal::restoreDefault() {
+	this->color = glm::vec3(1, 0.3, 0.0);
+	this->model = glm::mat4(1);
+	this->rotMat = glm::mat3(1);	
+	this->massCenter = glm::vec3(0, 0, 0);
+	this->elastic = 0.1f;
+}
+void Pedal::moveStick(GLfloat deltaTime) {
+	//std::cout << "moving" << std::endl;
+	if (this->moveDegree < moveLimit && this->moveDegree >= 0) {
+		
+		this->setRotationMatrix(glm::rotate(glm::radians((moveLimit / moveDuration) * deltaTime), glm::vec3(0, 0, 1)));
+		this->moveDegree = this->moveDegree + (moveLimit / moveDuration) * deltaTime;
+	}
 }

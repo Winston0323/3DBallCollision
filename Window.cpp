@@ -40,7 +40,6 @@ GLuint Window::pointShaderProgram;
 GLuint Window::toonShaderProgram;
 GLuint Window::phongShaderProgram;
 string objFileName = "obj/amongus_astro_still.obj";
-//string objFileName = "obj/cone.obj";
 ////////////////////////////////////////////////////////////////////////////////
 
 // Constructors and desctructors 
@@ -202,7 +201,7 @@ void Window::idleCallback()
 			//renderUpdate here
 			renderTime = renderTimeStep - renderTime;//reset timer
 			ball->renderUpdate();
-			table->update();
+			table->update(1 / DEFAULT_SIMRATE);
 		}
 		//Perform any updates as necessary.
 		while (calTime > simTimeStep) {
@@ -211,14 +210,14 @@ void Window::idleCallback()
 			//STEP 2.1 update 
 			ball->update(simTimeStep,restTime);
 			calTime += restTime;
-			table->update();
+			table->update(deltaTime);
 		}
 	}
 	else {//STEP 2.3 renderupdate when simulation not started  
 
 		lastFrameTime = glfwGetTime();
 		ball->renderUpdate();
-		table->update();
+		table->update(1/DEFAULT_SIMRATE);
 	}
 
 	
@@ -263,8 +262,8 @@ void Window::keyCallback(GLFWwindow* window, int key, int scancode, int action, 
 	 */
 	
 	// Check for a key press.
-	if (action == GLFW_PRESS)
-	{
+	//if (action == GLFW_PRESS)
+	//{
 		switch (key) 
 		{
 		case GLFW_KEY_ESCAPE:
@@ -280,7 +279,20 @@ void Window::keyCallback(GLFWwindow* window, int key, int scancode, int action, 
 			break;
 		case GLFW_KEY_D:
 			break;
-		case GLFW_KEY_UP:
+		case GLFW_KEY_J:
+			/*if (action == GLFW_PRESS) {
+
+				std::cout << "MovingLeft" << std::endl;
+				table->getPedalLeft()->setState(1);
+			}*/ 
+			 if (action == GLFW_PRESS) {
+				std::cout << "Pressing" << std::endl; 
+				table->getPedalLeft()->setState(1);
+			 }
+			 else if (action == GLFW_RELEASE) {
+				 std::cout << "Releasing" << std::endl;
+				 table->getPedalLeft()->setState(3);
+			 }
 
 			break;
 		case GLFW_KEY_DOWN:
@@ -288,7 +300,31 @@ void Window::keyCallback(GLFWwindow* window, int key, int scancode, int action, 
 		default:
 			break;
 		}
-	}
+	//}
+	//if (action == GLFW_RELEASE) {
+	//
+	//	switch (key)
+	//	{
+	//	case GLFW_KEY_D:
+	//		break;
+	//	case GLFW_KEY_J:
+	//		/*if (action == GLFW_PRESS) {
+
+	//			std::cout << "MovingLeft" << std::endl;
+	//			table->getPedalLeft()->setState(1);
+	//		}*/
+	//	
+	//			std::cout << "Releasing" << std::endl;
+	//			table->getPedalLeft()->setState(3);
+	//	
+
+	//		break;
+	//	case GLFW_KEY_DOWN:
+	//		break;
+	//	default:
+	//		break;
+	//	}
+	//}
 }
 
 void Window::mouse_callback(GLFWwindow* window, int button, int action, int mods)
