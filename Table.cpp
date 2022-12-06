@@ -27,21 +27,35 @@ Table::Table(GLfloat width,GLfloat length, glm::vec3 origin)
 	plains.push_back(tableLeft);
 	addCollider(tableLeft);
 	//Table leftTube
-	glm::vec3 tableLftTubeOrigin = glm::vec3(this->origin.x - length / 2 + 2.5f, this->origin.y -4, this->origin.z);
-	leftTube = new Plain(width-8, 4, tableLftTubeOrigin, glm::vec3(1, 0, 0), glm::vec3(0.9f, 0.9f, 0.5f));
+	glm::vec3 tableDownTubeOrigin = glm::vec3(this->origin.x+2.5 , this->origin.y -width/2+3, this->origin.z);
+	leftTube = new Plain(4, length-5, tableDownTubeOrigin, glm::vec3(0, -1, 0), glm::vec3(0.9f, 0.9f, 0.5f));
 	plains.push_back(leftTube);
 	addCollider(leftTube);
 	//Table right
-	glm::vec3 tableRHTOrigin = glm::vec3(this->origin.x + length / 2, this->origin.y, this->origin.z);
-	tableRight = new Plain(width, 4, tableRHTOrigin, glm::vec3(-1, 0, 0), glm::vec3(0.9f, 0.9f, 0.5f));
+	glm::vec3 tableRHTOrigin = glm::vec3(this->origin.x + length / 2, this->origin.y-width/2+1.5, this->origin.z);
+	tableRight = new Plain(3, 4, tableRHTOrigin, glm::vec3(-1, 0, 0), glm::vec3(0.9f, 0.9f, 0.5f));
 	plains.push_back(tableRight);
 	addCollider(tableRight);
 	//wall left corner incline
-	glm::vec3 wallInclineOrigin = glm::vec3(this->origin.x- length / 2 + 1, this->origin.y + width / 2 - 1, this->origin.z);
+	glm::vec3 wallInclineOrigin = glm::vec3(this->origin.x- length / 2 + 1, this->origin.y - width / 2 + 1, this->origin.z);
 	//wallIncline = new Plain(4, 4, wallInclineOrigin, glm::vec3(1, 1, 0), glm::vec3(0.9f, 0.9f, 0.5f));
-	wallIncline = new Plain(5,4,10,wallInclineOrigin, false ,glm::vec3(0.9f, 0.9f, 0.5f));
+	wallIncline = new Plain(4,4,5,wallInclineOrigin, true ,glm::vec3(0.9f, 0.9f, 0.5f));
 	plains.push_back(wallIncline);
 	addCollider(wallIncline);
+	//wall left corner incline
+	glm::vec3 wallInclineBtmLftOrigin = glm::vec3(this->origin.x + length / 2-2, this->origin.y - width / 2 + 3 + 2.5, this->origin.z);
+	//wallIncline = new Plain(4, 4, wallInclineOrigin, glm::vec3(1, 1, 0), glm::vec3(0.9f, 0.9f, 0.5f));
+	wallInclineBtmLft = new Plain(4, 2, 5, wallInclineBtmLftOrigin, false, glm::vec3(0.9f, 0.9f, 0.5f));
+	plains.push_back(wallInclineBtmLft);
+	addCollider(wallInclineBtmLft);
+
+	glm::vec3 wallInclineBtmRitOrigin = glm::vec3(this->origin.x + length / 2 - 2, this->origin.y + width / 2 - 2.5, this->origin.z);
+	//wallIncline = new Plain(4, 4, wallInclineOrigin, glm::vec3(1, 1, 0), glm::vec3(0.9f, 0.9f, 0.5f));
+	wallInclineBtmRit= new Plain(4, 2, 5, wallInclineBtmRitOrigin, true, glm::vec3(0.9f, 0.9f, 0.5f));
+	plains.push_back(wallInclineBtmRit);
+	addCollider(wallInclineBtmRit);
+
+
 	//Bounce balls
 	glm::vec3 ballOrigin1 = glm::vec3(-18,10,0);
 	bounceBall1 = new BounceBall(ballOrigin1, 1.5);

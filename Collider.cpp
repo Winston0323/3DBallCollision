@@ -51,7 +51,13 @@ glm::vec3 Collider::GetNorm(glm::vec3 pos)
 	}
 	else if(this->state == 2) { //when plain
 		//std::cout << "Should not use this getnorm on plain!!!!" << std::endl;
-		result = this->norm;
+		if (checkSide(pos)) {
+			result = this->norm;
+		}
+		else {
+			result = -this->norm;
+		}
+		
 		return result;
 	}
 	else if (this->state == 3) {

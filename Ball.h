@@ -44,6 +44,7 @@ public:
 	glm::vec3 getNorm();
 	glm::vec3 getPos();
 	void boxCollision(GLfloat timeStep, GLfloat& restTime);
+	void resting();
 	void renderUpdate();
 
 	std::vector<glm::vec3> intRK( GLfloat timeStep);

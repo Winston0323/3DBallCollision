@@ -355,7 +355,7 @@ void Window::drawGUI() {
 		ImGui::SliderFloat("X degrees", ball->getPosX(), -24, 24);
 		ImGui::SliderFloat("Y degrees", ball->getPosY(), -24, 24);
 		ImGui::Text("Velocity:");
-		ImGui::SliderFloat("Vel X", ball->getVelX(), -24, 24);
+		ImGui::SliderFloat("Vel X", ball->getVelX(), -100, 100);
 		ImGui::SliderFloat("Vel Y", ball->getVelY(), -100, 100);
 		ImGui::Text("Properties:");
 		ImGui::SliderFloat("Elastic", ball->getElastic(), 0, 1);

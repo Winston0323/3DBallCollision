@@ -1,5 +1,5 @@
-#ifndef _POINT_CLOUD_H_
-#define _POINT_CLOUD_H_
+#ifndef _PEDAL_H_
+#define _PEDAL_H_
 
 #include "Object.h"
 #include "Plain.h"
@@ -13,7 +13,7 @@
 
 using namespace std;
 
-class PointCloud : public Object
+class Pedal : public Object
 {
 private:
 	std::vector<glm::vec3> points;
@@ -27,8 +27,8 @@ private:
 
 
 public:
-	PointCloud(std::string objFilename, GLfloat pointSize);
-	~PointCloud();
+	Pedal(std::string objFilename, GLfloat pointSize);
+	~Pedal();
 
 	void draw(const glm::mat4& viewProjMtx, GLuint shader);
 	void update();

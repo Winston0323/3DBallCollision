@@ -420,7 +420,7 @@ Plain::Plain(GLfloat width, GLfloat length, GLfloat diff, glm::vec3 origin, bool
 	// Specify vertex positions
 	GLfloat wOffset = width / 2;
 	GLfloat lOffset = length / 2;
-	GLfloat yOffset = diff / (2 * sqrt(2));
+	GLfloat yOffset = diff / 2;
 	this->elastic = DEFAULT_WALL_ELASTIC;
 
 	if (right) {

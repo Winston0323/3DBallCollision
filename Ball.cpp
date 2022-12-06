@@ -199,10 +199,11 @@ void Ball::boxCollision(GLfloat timeStep, GLfloat& restTime) {
 		}
 		else if (hitCollider->GetState() == 2) {
 			if (hitCollider->checkSide(this->position)) {
-				this->position = this->position + hitCollider->GetNorm() * 0.01f;
+				this->position = this->position + hitCollider->GetNorm(posCol) * 0.01f;
 			}
 			else {
-				this->position = this->position - hitCollider->GetNorm() * 0.01f;
+				//this->position = this->position - hitCollider->GetNorm() * 0.01f;
+				this->position = this->position + hitCollider->GetNorm(posCol) * 0.01f;
 			}
 			
 		}
@@ -225,7 +226,7 @@ void Ball::boxCollision(GLfloat timeStep, GLfloat& restTime) {
 	}
 
 
-	if (this->velocity.x* this->velocity.x+this->velocity.y* this->velocity.y > 1225) {
+	if (this->velocity.x* this->velocity.x+this->velocity.y* this->velocity.y > 2500) {
 		//std::cout << "damped" << std::endl;
 		glm::vec3 velDir = glm::normalize(this->velocity);
 		this->velocity = velDir * 50.0f;
@@ -303,7 +304,7 @@ GLfloat* Ball::getVelZ()
 ////////////////////////////////////////////////////////////////////////////////
 void Ball::restoreDefault()
 {
-	this->position = glm::vec3(-23,-12,0);
+	this->position = glm::vec3(+23,-12,0);
 	this->velocity = glm::vec3(0);
 	this->windVelocity = glm::vec3(0);
 	this->mass = DEFAULT_MASS;
