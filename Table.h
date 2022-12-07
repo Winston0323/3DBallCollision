@@ -5,12 +5,14 @@
 #include "Plain.h"
 #include "Pedal.h"
 #include "BounceBall.h"
+#include "ColliderBall.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 
 class Table
 {
 private:
+	int beforceColliderBall;
 	GLfloat size;
 	GLfloat width;
 	GLfloat length;
@@ -29,10 +31,14 @@ private:
 	BounceBall* bounceBall1;
 	BounceBall* bounceBall2;
 	BounceBall* bounceBall3;
+	ColliderBall* colliderBall11;
+	ColliderBall* colliderBall12;
+	ColliderBall* colliderBall13;
 	Pedal* pedalLeft;
 	Pedal* pedalRight;
 	std::vector<Plain*> plains;
 	std::vector<BounceBall*> bbs;
+	std::vector<ColliderBall*> cbs;
 	std::vector<Collider*> colliders;
 	void addCollider(Plain* plain);
 
@@ -47,6 +53,7 @@ public:
 	std::vector<BounceBall*> getBounceBalls() { return this->bbs; }
 	Pedal* getPedalLeft() { return this->pedalLeft; }
 	Pedal* getPedalRight() { return this->pedalRight; }
+	void removeBall(int i);
 };
 
 ////////////////////////////////////////////////////////////////////////////////

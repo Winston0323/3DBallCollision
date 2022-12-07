@@ -17,6 +17,8 @@ private:
 	glm::vec3 peak;
 	GLfloat radius;
 	GLfloat elastic;
+	bool hit = false;
+	bool oneTime = false;
 
 	int state; //1 is sphere, 2 is plain, 3 is edge, 4 is one way wall
 	glm::vec3 norm;
@@ -73,18 +75,21 @@ public:
 	GLfloat GetElastic() { return this->elastic; }
 	glm::vec3 GetNorm(glm::vec3 pos);
 	glm::vec3 GetNorm() { return this->norm; }
+	bool GetHit() { return this->hit; }
 	glm::vec3 velResp(glm::vec3 pos, GLfloat angularVel);
 	int GetState() { return this->state; }
 	
 	//setters
 	void setCenter(glm::vec3 val) { this->center = val; }
 	void setRadius(GLfloat val) { this->radius = val; }
+	void setHit(bool val) { this->hit = val; }
 	//getter for imgui
 	GLfloat* getElastic() { return &this->elastic; }
 	std::pair<bool, GLfloat> checkHit(glm::vec3 pos, glm::vec3 nextPos, glm::vec3 vel,GLfloat rad);
 	bool checkSide(glm::vec3 pos);
 	void translate(glm::vec3 destination) { this->center = destination; }
 	void spin(glm::vec3 referPnt, glm::vec3 peak);
+	void setOneTime(bool val) { this->oneTime = val; }
 };
 
 ////////////////////////////////////////////////////////////////////////////////

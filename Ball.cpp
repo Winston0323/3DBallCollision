@@ -146,6 +146,7 @@ void Ball::boxCollision(GLfloat timeStep, GLfloat& restTime) {
 				f = collider->checkHit(this->position, nextPos,
 					this->velocity, this->radius).second;//set f 
 				hitCollider = collider;//set collider 
+				hitCollider->setHit(true);
 				hit = true;//set hit
 				//if (hitCollider->GetState() == 1) {
 				//	printf("Hitwith sphere %d\n", i);
@@ -209,7 +210,6 @@ void Ball::boxCollision(GLfloat timeStep, GLfloat& restTime) {
 		else {
 			this->position = this->position + hitCollider->GetNorm(posCol) * 0.01f;
 			this->velocity = vnext;
-		
 		}
 		
 
@@ -226,9 +226,11 @@ void Ball::boxCollision(GLfloat timeStep, GLfloat& restTime) {
 
 
 	if (this->velocity.x* this->velocity.x+this->velocity.y* this->velocity.y > 2500) {
-		//std::cout << "damped" << std::endl;
-		glm::vec3 velDir = glm::normalize(this->velocity);
-		this->velocity = velDir * 50.0f;
+		if (this->position.y > -10.5) {
+			//std::cout << "damped" << std::endl;
+			glm::vec3 velDir = glm::normalize(this->velocity);
+			this->velocity = velDir * 50.0f;
+		}
 	}
 	this->position.z = 0;
 

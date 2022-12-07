@@ -85,10 +85,9 @@ Table::Table(GLfloat width,GLfloat length, glm::vec3 origin)
 	bounceBall3 = new BounceBall(ballOrigin3, 2);
 	bbs.push_back(bounceBall3);
 	colliders.push_back(bounceBall3->GetCollider());
-	
 	//pedals
-	pedalLeft = new Pedal(glm::vec3(this->origin.x + length / 2-1, this->origin.y - width / 2 + 3 + 5, this->origin.z),0,false);
-	pedalLeft->setRotationMatrix(-15.0f, glm::vec3(0,0,1));
+	pedalLeft = new Pedal(glm::vec3(this->origin.x + length / 2 - 1, this->origin.y - width / 2 + 3 + 5, this->origin.z), 0, false);
+	pedalLeft->setRotationMatrix(-15.0f, glm::vec3(0, 0, 1));
 	colliders.push_back(pedalLeft->GetCollider()[0]);
 	colliders.push_back(pedalLeft->GetCollider()[1]);
 	//colliders.push_back(pedalLeft->GetCollider()[1]);
@@ -97,6 +96,40 @@ Table::Table(GLfloat width,GLfloat length, glm::vec3 origin)
 	pedalRight->setRotationMatrix(15.0f, glm::vec3(0, 0, 1));
 	colliders.push_back(pedalRight->GetCollider()[0]);
 	colliders.push_back(pedalRight->GetCollider()[1]);
+	
+	
+	this->beforceColliderBall = colliders.size();
+	
+
+	GLfloat distance = 3;
+	int number = 5;
+	GLfloat cBallCenterY = 2;
+	GLfloat cBallCenterX = -3;
+	for (int j = 0; j < number; j++) {
+		//Collider balls
+		cBallCenterX = cBallCenterX + distance;
+		for (int i = 0; i <= number / 2; i = i + 1) {
+			if (i == 0) {
+				glm::vec3 currOrigin = glm::vec3(cBallCenterX, cBallCenterY, 0);
+				colliderBall11 = new ColliderBall(currOrigin, 0.5);
+				cbs.push_back(colliderBall11);
+				colliders.push_back(colliderBall11->GetCollider());
+			}
+			else {
+
+				glm::vec3 currOrigin = glm::vec3(cBallCenterX, cBallCenterY - distance * i, 0);
+				colliderBall11 = new ColliderBall(currOrigin, 0.5);
+				cbs.push_back(colliderBall11);
+				colliders.push_back(colliderBall11->GetCollider());
+				currOrigin = glm::vec3(cBallCenterX, cBallCenterY + distance * i, 0);
+				colliderBall11 = new ColliderBall(currOrigin, 0.5);
+				cbs.push_back(colliderBall11);
+				colliders.push_back(colliderBall11->GetCollider());
+			}
+
+		}
+	}
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -115,6 +148,11 @@ void Table::draw(const glm::mat4& viewProjMtx, GLuint shader)
 	for (BounceBall* bb : bbs) {
 		bb->draw(viewProjMtx, shader);
 	}
+	for (ColliderBall* cb : cbs) {
+		if (!cb->GetCollider()->GetHit()) {
+			cb->draw(viewProjMtx, shader);
+		}
+	}
 	pedalLeft->draw(viewProjMtx, shader);
 	pedalRight->draw(viewProjMtx, shader);
 }
@@ -125,7 +163,14 @@ void Table::update(GLfloat deltaTime) {
 	//}
 	for (BounceBall* bb : bbs) {
 		bb->renderUpdate();
+		bb->update(deltaTime);
 	}
+	//for (int i = 0; i < cbs.size();i++) {
+	//	ColliderBall* cb = this->cbs[i];
+	//	if (cb->GetCollider()->GetHit()) {
+	//		removeBall(i);
+	//	}
+	//}
 	pedalLeft->update(deltaTime);
 	pedalRight->update(deltaTime);
 
@@ -139,3 +184,7 @@ void Table::addCollider(Plain* plain) {
 		colliders.push_back(collider);
 	}
 }
+void Table::removeBall(int i) {
+	cbs.erase(cbs.begin()+i);
+}
+

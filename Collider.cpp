@@ -136,6 +136,10 @@ glm::vec3 Collider::GetNorm(glm::vec3 pos)
 	}
 }
 std::pair<bool, GLfloat> Collider::checkHit(glm::vec3 pos, glm::vec3 nextPos,glm::vec3 vel, GLfloat rad){
+	
+	if (this->oneTime && this->hit) {
+		return std::make_pair(false, -1);
+	}
 	if (this->state == 1) {
 		glm::vec3 temp = pos - this->center;
 		GLfloat dotProduct = glm::dot(temp, vel);

@@ -31,6 +31,7 @@ public:
 	void translation(glm::vec3 destination);
 	GLfloat* getRadius() { return &this->radius; }
 	void changeColor(glm::vec3 color);
+
 };
 
 #endif

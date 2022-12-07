@@ -1,5 +1,5 @@
-#ifndef _BOUNCEBALL_H_
-#define _BOUNCEBALL_H_
+#ifndef _COLLIDERBALL_H_
+#define _COLLIDERBALL_H_
 
 #include "core.h"
 #include "Plain.h"
@@ -8,7 +8,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class BounceBall
+class ColliderBall
 {
 private:
 
@@ -21,8 +21,8 @@ private:
 
 
 public:
-	BounceBall(glm::vec3 origin, GLfloat radius );
-	~BounceBall();
+	ColliderBall(glm::vec3 origin, GLfloat radius );
+	~ColliderBall();
 	void draw(const glm::mat4& viewProjMtx, GLuint shader);
 	void translate(glm::vec3 destination) {
 		this->represent->translation(destination);
