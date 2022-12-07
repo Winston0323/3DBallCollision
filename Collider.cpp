@@ -155,20 +155,23 @@ std::pair<bool, GLfloat> Collider::checkHit(glm::vec3 pos, glm::vec3 nextPos,glm
 			return std::make_pair(false, -1);
 		}
 	}
-	else if (this->state == 2) {//when it is a plain
+	else if (this->state == 2||this->state ==4) {//when it is a plain
 
+		if (state == 4) {
+			if (checkSide(pos)==false) {
+				return std::make_pair(false, -1);
+			}
+			GLfloat dir = glm::dot(vel, this->norm);
+			if (dir > 0) {
+				return std::make_pair(false, -1);
+			}
+
+		}
+		
 		GLfloat dist = glm::length(glm::dot(this->center - nextPos, this->norm));
 		if (dist > rad + EPSILON) {
 			return std::make_pair(false, -1);
 		}
-		//GLfloat dir = glm::dot(vel, this->GetNorm(pos));
-		//if (checkSide(pos) && dir <0) {
-		//	return std::make_pair(false, -1);
-		//}
-		//GLfloat dist1 = glm::length(glm::dot(this->center - pos, this->norm));
-		//if (dist1 < rad + EPSILON) {
-		//	return std::make_pair(true, 0);
-		//}
 
 		//GLfloat thit = glm::dot((this->center - pos + this->norm * rad), this->norm) / glm::dot(vel, this->norm);
 		GLfloat thit = (glm::dot((this->center - pos), this->norm) + rad + EPSILON) / glm::dot(vel, this->norm);
