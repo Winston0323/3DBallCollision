@@ -33,7 +33,7 @@ public:
 	Plain(GLfloat size, glm::vec3 origin, glm::vec3 color);
 	Plain(GLfloat size, glm::vec3 origin, glm::vec3 normal, glm::vec3 color);
 	Plain(GLfloat width,GLfloat height, glm::vec3 origin, glm::vec3 normal, glm::vec3 color);
-	Plain(GLfloat width,GLfloat height, GLfloat diff, glm::vec3 origin, bool right, glm::vec3 color);
+	Plain(GLfloat width,GLfloat height, GLfloat diff, glm::vec3 origin, bool right, glm::vec3 color, bool oneway);
 	Plain(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 color);
 
 	~Plain();

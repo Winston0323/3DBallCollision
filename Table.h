@@ -21,7 +21,9 @@ private:
 	Plain* tableLeft;
 	Plain* tableRight;
 	Plain* leftTube;
+	Plain* leftTubeOp;
 	Plain* wallIncline;
+	Plain* pipeLid;
 	Plain* wallInclineBtmLft;
 	Plain* wallInclineBtmRit;
 	BounceBall* bounceBall1;

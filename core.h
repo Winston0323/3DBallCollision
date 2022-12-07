@@ -39,7 +39,7 @@
 #define DEFAULT_DAMPING_CONST 30.0f
 
 //environment Properties
-#define DEFAULT_AIRRESIST 0.0f
+#define DEFAULT_AIRRESIST 0.3f
 #define DEFAULT_DRAG_CONST 1.0f
 #define DEFAULT_LIFT_CONST 1.0f
 #define DEFAULT_FRICTION 0.0f

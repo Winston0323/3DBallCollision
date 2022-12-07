@@ -208,12 +208,12 @@ Plain::Plain(GLfloat size, glm::vec3 origin, glm::vec3 normal, glm::vec3 color)
 	colliders.push_back(new Collider(this->positions[this->indices[0]],
 										this->positions[this->indices[1]],
 										this->positions[this->indices[2]], 
-										normal,this->elastic));
+										normal,this->elastic, false));
 
 	colliders.push_back(new Collider(this->positions[this->indices[3]],
 										this->positions[this->indices[4]],
 										this->positions[this->indices[5]], 
-										normal, this->elastic));
+										normal, this->elastic, false));
 	
 	// Generate a vertex array (VAO) and two vertex buffer objects (VBO).
 	glGenVertexArrays(1, &VAO);
@@ -357,12 +357,12 @@ Plain::Plain(GLfloat width, GLfloat length, glm::vec3 origin, glm::vec3 normal, 
 	colliders.push_back(new Collider(this->positions[this->indices[0]],
 		this->positions[this->indices[1]],
 		this->positions[this->indices[2]],
-		normal, this->elastic));
+		normal, this->elastic, false));
 
 	colliders.push_back(new Collider(this->positions[this->indices[3]],
 		this->positions[this->indices[4]],
 		this->positions[this->indices[5]],
-		normal, this->elastic));
+		normal, this->elastic,false));
 	colliders.push_back(new Collider(this->positions[this->indices[0]],
 		this->positions[this->indices[2]], this->elastic));
 	colliders.push_back(new Collider(this->positions[this->indices[1]],
@@ -409,7 +409,7 @@ Plain::Plain(GLfloat width, GLfloat length, glm::vec3 origin, glm::vec3 normal, 
 	glBindVertexArray(0);
 }
 ////////////////////////////////////////////////////////////////////////////////
-Plain::Plain(GLfloat width, GLfloat length, GLfloat diff, glm::vec3 origin, bool right, glm::vec3 color)
+Plain::Plain(GLfloat width, GLfloat length, GLfloat diff, glm::vec3 origin, bool right, glm::vec3 color, bool oneway)
 {
 	this->origin = origin;
 	// Model matrix.
@@ -470,16 +470,20 @@ Plain::Plain(GLfloat width, GLfloat length, GLfloat diff, glm::vec3 origin, bool
 	colliders.push_back(new Collider(this->positions[this->indices[0]],
 		this->positions[this->indices[1]],
 		this->positions[this->indices[2]],
-		norm, this->elastic));
+		norm, this->elastic, oneway));
 
 	colliders.push_back(new Collider(this->positions[this->indices[3]],
 		this->positions[this->indices[4]],
 		this->positions[this->indices[5]],
-		norm , this->elastic));
-	colliders.push_back(new Collider(this->positions[this->indices[0]],
-		this->positions[this->indices[2]], this->elastic));
-	colliders.push_back(new Collider(this->positions[this->indices[1]],
-		this->positions[this->indices[3]], this->elastic));
+		norm , this->elastic, oneway));
+
+	if (!oneway) {
+		colliders.push_back(new Collider(this->positions[this->indices[0]],
+			this->positions[this->indices[2]], this->elastic));
+		colliders.push_back(new Collider(this->positions[this->indices[1]],
+			this->positions[this->indices[3]], this->elastic));
+	}
+
 	//colliders.push_back(new Plain(	this->positions[this->indices[0]],
 	//								this->positions[this->indices[1]],
 	//								this->positions[this->indices[2]], this->color));
@@ -534,6 +538,7 @@ void Plain::draw(const glm::mat4& viewProjMtx, GLuint shader)
 {
 	//glEnable(GL_CULL_FACE);
 	//glCullFace(GL_BACK);
+	//colliders[0]->draw(viewProjMtx, shader);
 	glDisable(GL_CULL_FACE);
 	// actiavte the shader program 
 	glUseProgram(shader);

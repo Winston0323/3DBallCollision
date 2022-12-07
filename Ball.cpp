@@ -195,24 +195,23 @@ void Ball::boxCollision(GLfloat timeStep, GLfloat& restTime) {
 		if (hitCollider->GetState() == 1) {
 			
 			this->position = this->position + hitCollider->GetNorm(posCol) * 0.01f;
-			
+			this->velocity = vnext;
 		}
 		else if (hitCollider->GetState() == 2) {
-			if (hitCollider->checkSide(this->position)) {
-				this->position = this->position + hitCollider->GetNorm(posCol) * 0.01f;
-			}
-			else {
-				//this->position = this->position - hitCollider->GetNorm() * 0.01f;
-				this->position = this->position + hitCollider->GetNorm(posCol) * 0.01f;
-			}
-			
+			this->position = this->position + hitCollider->GetNorm(posCol) * 0.01f;
+			this->velocity = vnext;
 		}
-		else {
+		else if (hitCollider->GetState() == 3) {
 		
 			this->position = this->position + hitCollider->GetNorm(posCol) * 0.01f;
+			this->velocity = vnext;
+		}
+		else {
+			this->position = this->position + hitCollider->GetNorm(posCol) * 0.01f;
+			this->velocity = vnext;
+		
 		}
 		
-		this->velocity = vnext;
 
 		//this->force = gravForceMult;//clear force
 		defaultForces();

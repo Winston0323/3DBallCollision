@@ -10,12 +10,21 @@ Pedal::Pedal(glm::vec3 initPos, GLfloat initSpin,bool flip)
 	else {
 		objFilename = "obj/cone.obj";
 	}
-	
+	this->flip = flip;
+
 	objParser(objFilename);//setup render data
 	spinPerVetex(initSpin,glm::vec3(0,0,1));
 	restoreDefault();//setup constance
 	moveToWorldCenter();//correct render data
 	translationPerVertex(initPos);
+	//generate collider 
+	//glm::vec3 pos1 = glm::vec3(this->massCenter.x, this->massCenter.y, this->massCenter.z - 2);
+	//glm::vec3 pos2 = glm::vec3(this->massCenter.x, this->massCenter.y, this->massCenter.z + 2);
+	//glm::vec3 pos3 = this->points[32];
+	//glm::vec3 norm = glm::normalize(glm::cross(pos2 - pos1, pos3 - pos1));
+	this->colliders.push_back(new Collider(0.3, this->massCenter, this->points[32]));
+	this->colliders.push_back(new Collider(0.3, this->rightMassCenter, this->points[32]));
+	//rendering set up
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBOvertex);
 	glGenBuffers(1, &VBOnormal);
@@ -59,6 +68,7 @@ Pedal::~Pedal()
 
 void Pedal::draw(const glm::mat4& viewProjMtx, GLuint shader)
 {
+	//this->colliders[1]->draw(viewProjMtx, shader);
 	// actiavte the shader program 
 	glDisable(GL_CULL_FACE);
 	glUseProgram(shader);
@@ -102,6 +112,8 @@ void Pedal::draw(const glm::mat4& viewProjMtx, GLuint shader)
 void Pedal::update(GLfloat deltaTime)
 {
 	this->points = localToWorld(this->massCenter, this->rotMat);
+	this->colliders[0]->spin(this->massCenter, this->points[32]);
+	this->colliders[1]->spin(this->massCenter, this->points[32]);
 	if (state == 1) {
 		//std::cout << "Moving Up" << std::endl;
 		moveStick(deltaTime);
@@ -142,11 +154,13 @@ void Pedal::translation(glm::vec3 destination)
 {
 	//move the masss center to the destination point
 	this->massCenter = glm::vec3(destination);
+	this->rightMassCenter = this->massCenter + rotMat * this->localPos[12];
 	model = glm::translate(glm::mat4(1.0f), destination);
 }
 void Pedal::translationPerVertex(glm::vec3 destination)
 {
 	this->massCenter = glm::vec3(destination);
+	this->rightMassCenter = this->massCenter + rotMat * this->localPos[12];
 }
 
 void Pedal::objParser(string objFilename)
@@ -241,10 +255,10 @@ void Pedal::moveToWorldCenter() {
 		points[i].y = points[i].y - midY;
 		points[i].z = points[i].z - midZ;
 	}
-	scale(0.4,1,0.3);
+	scale(0.4,1.3,0.3);
 
 	this->massCenter = this->points[28];
-
+	this->rightMassCenter = this->points[12];
 	for (int i = 0; i < points.size(); i++) {
 
 		points[i].x = points[i].x - this->massCenter.x;
@@ -315,9 +329,54 @@ void Pedal::restoreDefault() {
 }
 void Pedal::moveStick(GLfloat deltaTime) {
 	//std::cout << "moving" << std::endl;
-	if (this->moveDegree < moveLimit && this->moveDegree >= 0) {
-		
-		this->setRotationMatrix(glm::rotate(glm::radians((moveLimit / moveDuration) * deltaTime), glm::vec3(0, 0, 1)));
-		this->moveDegree = this->moveDegree + (moveLimit / moveDuration) * deltaTime;
+	if (flip) {
+
+		if (this->moveDegree <= moveLimit && this->moveDegree >= 0) {
+
+			this->setRotationMatrix((moveLimit / moveDuration) * deltaTime, glm::vec3(0,0,-1));
+			this->moveDegree = this->moveDegree + (moveLimit / moveDuration) * deltaTime;
+		}
+		else if (this->moveDegree > moveLimit) {
+
+			this->moveDegree = moveLimit;
+			this->setState(2);
+		}
+		else if (this->moveDegree < 0) {
+			this->moveDegree = 0;
+			this->setState(0);
+		}
+	
+	}
+	else {
+		if (this->moveDegree <= moveLimit && this->moveDegree >= 0) {
+
+			this->setRotationMatrix((moveLimit / moveDuration) * deltaTime, glm::vec3(0, 0, 1));
+			this->moveDegree = this->moveDegree + (moveLimit / moveDuration) * deltaTime;
+		}
+		else if (this->moveDegree > moveLimit) {
+
+			this->moveDegree = moveLimit;
+			this->setState(2);
+		}
+		else if (this->moveDegree < 0) {
+			this->moveDegree = 0;
+			this->setState(0);
+		}
+	}
+
+}
+GLfloat Pedal::GetAngVel()
+{
+	if (this->state == 0) {
+		return 3;
+	}
+	else if (this->state == 1) {
+		return 50;
+	}
+	else if (this->state == 2) {
+		return 3;
+	}
+	else if (this->state == 4) {
+		return 3;
 	}
 }

@@ -30,18 +30,20 @@ private:
 
 	//centers
 	glm::vec3 massCenter;
+	glm::vec3 rightMassCenter;
 	glm::mat3 rotMat;
 	glm::quat rotQuat;
 	int state = 0;//0 is resting, 1 is moving up, 2 is holding, 3 is moving down
+	bool flip;
 
 	//collision
-	std::vector<Plain*> colliders;
+	std::vector<Collider*> colliders;
 	GLfloat elastic;
 	
 	//animation
 	GLfloat moveDegree = 0.0f;
-	GLfloat moveLimit = 30.0f;
-	GLfloat moveDuration = 0.25f;
+	GLfloat moveLimit = 60.0f;
+	GLfloat moveDuration = 0.5f;
 
 	//3 dimension
 	GLfloat xMax;
@@ -77,12 +79,17 @@ public:
 	GLfloat	GetYMin() { return this->yMin; }
 	GLfloat	GetZMax() { return this->zMax; }
 	GLfloat	GetZMin() { return this->zMin; }
+	
+	GLfloat	GetAngVel();
 
 	std::vector<glm::vec3> localToWorld(glm::vec3 massCenter, glm::mat3 rotMat);
-	void setCollider(std::vector<Plain*> val) { this->colliders = val; }
-	void setRotationMatrix(glm::mat3 val) { this->rotMat = val* this->rotMat ; }
+	void setCollider(std::vector<Collider*> val) { this->colliders = val; }
+	void setRotationMatrix(GLfloat degree, glm::vec3 axis) {
+		this->rotMat = glm::mat3(glm::rotate(glm::radians(degree), axis)) * this->rotMat;
+	}
 	void setState(int val) { this->state = val; }
 
+	std::vector<Collider*> GetCollider() { return this->colliders; }
 	void moveStick(GLfloat deltaTime);
 
 	void restoreDefault();

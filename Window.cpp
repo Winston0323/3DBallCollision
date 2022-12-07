@@ -201,17 +201,19 @@ void Window::idleCallback()
 			//renderUpdate here
 			renderTime = renderTimeStep - renderTime;//reset timer
 			ball->renderUpdate();
-			table->update(1 / DEFAULT_SIMRATE);
+			//table->update(1 / DEFAULT_SIMRATE);
 		}
 		//Perform any updates as necessary.
 		while (calTime > simTimeStep) {
 			calTime -= simTimeStep;
 			GLfloat restTime = 0.0f;
 			//STEP 2.1 update 
+			//table->update(simTimeStep);
 			ball->update(simTimeStep,restTime);
 			calTime += restTime;
-			table->update(deltaTime);
+			
 		}
+		table->update(simTimeStep);
 	}
 	else {//STEP 2.3 renderupdate when simulation not started  
 
@@ -262,8 +264,8 @@ void Window::keyCallback(GLFWwindow* window, int key, int scancode, int action, 
 	 */
 	
 	// Check for a key press.
-	//if (action == GLFW_PRESS)
-	//{
+	if (action == GLFW_PRESS)
+	{
 		switch (key) 
 		{
 		case GLFW_KEY_ESCAPE:
@@ -279,52 +281,40 @@ void Window::keyCallback(GLFWwindow* window, int key, int scancode, int action, 
 			break;
 		case GLFW_KEY_D:
 			break;
-		case GLFW_KEY_J:
-			/*if (action == GLFW_PRESS) {
-
-				std::cout << "MovingLeft" << std::endl;
-				table->getPedalLeft()->setState(1);
-			}*/ 
-			 if (action == GLFW_PRESS) {
-				std::cout << "Pressing" << std::endl; 
-				table->getPedalLeft()->setState(1);
-			 }
-			 else if (action == GLFW_RELEASE) {
-				 std::cout << "Releasing" << std::endl;
-				 table->getPedalLeft()->setState(3);
-			 }
-
+		case GLFW_KEY_LEFT:
+			std::cout << "Pressing" << std::endl;
+			table->getPedalLeft()->setState(1);
+			break;
+		case GLFW_KEY_RIGHT:
+			std::cout << "Pressing" << std::endl;
+			table->getPedalRight()->setState(1);
 			break;
 		case GLFW_KEY_DOWN:
 			break;
 		default:
 			break;
 		}
-	//}
-	//if (action == GLFW_RELEASE) {
-	//
-	//	switch (key)
-	//	{
-	//	case GLFW_KEY_D:
-	//		break;
-	//	case GLFW_KEY_J:
-	//		/*if (action == GLFW_PRESS) {
-
-	//			std::cout << "MovingLeft" << std::endl;
-	//			table->getPedalLeft()->setState(1);
-	//		}*/
-	//	
-	//			std::cout << "Releasing" << std::endl;
-	//			table->getPedalLeft()->setState(3);
-	//	
-
-	//		break;
-	//	case GLFW_KEY_DOWN:
-	//		break;
-	//	default:
-	//		break;
-	//	}
-	//}
+	}
+	else if (action == GLFW_RELEASE) {
+	
+		switch (key)
+		{
+		case GLFW_KEY_D:
+			break;
+		case GLFW_KEY_LEFT:
+			std::cout << "Releasing" << std::endl;
+			table->getPedalLeft()->setState(3);
+			break;
+		case GLFW_KEY_RIGHT:
+			std::cout << "Releasing" << std::endl;
+			table->getPedalRight()->setState(3);
+			break;
+		case GLFW_KEY_DOWN:
+			break;
+		default:
+			break;
+		}
+	}
 }
 
 void Window::mouse_callback(GLFWwindow* window, int button, int action, int mods)
@@ -374,7 +364,7 @@ void Window::drawGUI() {
 	//Windspeed show
 	ImGui::Begin("Pin Ball Engine");                          // Create a window called "Hello, world!" and append into it.
 	
-	ImGui::SetWindowSize(ImVec2(350, Window::height));
+	ImGui::SetWindowSize(ImVec2(350, Window::height/2));
 	ImGui::SetWindowPos(ImVec2(Window::width -350,0));
 
 	//if (ImGui::Button("Change Intergrate Method")) {
