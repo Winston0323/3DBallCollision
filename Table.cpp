@@ -97,31 +97,31 @@ Table::Table(GLfloat width,GLfloat length, glm::vec3 origin)
 	colliders.push_back(pedalRight->GetCollider()[0]);
 	colliders.push_back(pedalRight->GetCollider()[1]);
 	
-	
 	this->beforceColliderBall = colliders.size();
 	
-
-	GLfloat distance = 3;
+	GLfloat distance = 4;
 	int number = 5;
-	GLfloat cBallCenterY = 2;
-	GLfloat cBallCenterX = -3;
+	GLfloat cBallCenterY = 1;
+	GLfloat cBallCenterX = -8;
 	for (int j = 0; j < number; j++) {
 		//Collider balls
 		cBallCenterX = cBallCenterX + distance;
 		for (int i = 0; i <= number / 2; i = i + 1) {
+			GLfloat diffX = (float)std::rand() / RAND_MAX * 2;
+			GLfloat diffY = (float)std::rand() / RAND_MAX * 2;
 			if (i == 0) {
-				glm::vec3 currOrigin = glm::vec3(cBallCenterX, cBallCenterY, 0);
+				glm::vec3 currOrigin = glm::vec3(cBallCenterX+diffX, cBallCenterY + diffY, 0);
 				colliderBall11 = new ColliderBall(currOrigin, 0.5);
 				cbs.push_back(colliderBall11);
 				colliders.push_back(colliderBall11->GetCollider());
 			}
 			else {
 
-				glm::vec3 currOrigin = glm::vec3(cBallCenterX, cBallCenterY - distance * i, 0);
+				glm::vec3 currOrigin = glm::vec3(cBallCenterX + diffX, cBallCenterY - distance * i+ diffY, 0);
 				colliderBall11 = new ColliderBall(currOrigin, 0.5);
 				cbs.push_back(colliderBall11);
 				colliders.push_back(colliderBall11->GetCollider());
-				currOrigin = glm::vec3(cBallCenterX, cBallCenterY + distance * i, 0);
+				currOrigin = glm::vec3(cBallCenterX + diffX, cBallCenterY + distance * i + diffY, 0);
 				colliderBall11 = new ColliderBall(currOrigin, 0.5);
 				cbs.push_back(colliderBall11);
 				colliders.push_back(colliderBall11->GetCollider());
