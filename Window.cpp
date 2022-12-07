@@ -211,7 +211,13 @@ void Window::idleCallback()
 			//table->update(simTimeStep);
 			ball->update(simTimeStep,restTime);
 			calTime += restTime;
+			if (table->GetClearTime() > 0) {
+				ball->setGravMult(-10);
+			}
+			else {
+				ball->setGravMult(1);
 			
+			}
 		}
 		table->update(simTimeStep);
 	}
@@ -381,7 +387,7 @@ void Window::drawGUI() {
 		ImGui::SliderFloat("X degrees", ball->getPosX(), -24, 24);
 		ImGui::SliderFloat("Y degrees", ball->getPosY(), -24, 24);
 		ImGui::Text("Velocity:");
-		ImGui::SliderFloat("Vel X", ball->getVelX(), -100, 100);
+		ImGui::SliderFloat("Vel X", ball->getVelX(), -500, 100);
 		ImGui::SliderFloat("Vel Y", ball->getVelY(), -100, 100);
 		ImGui::Text("Properties:");
 		ImGui::SliderFloat("Elastic", ball->getElastic(), 0, 1);

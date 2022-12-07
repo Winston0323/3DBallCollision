@@ -20,7 +20,7 @@ private:
 	bool hit = false;
 	bool oneTime = false;
 
-	int state; //1 is sphere, 2 is plain, 3 is edge, 4 is one way wall
+	int state; //1 is sphere, 2 is plain, 3 is edge, 4 is one way wall,5 is no response collider
 	glm::vec3 norm;
 	std::vector<glm::vec3> positions;
 
@@ -82,6 +82,7 @@ public:
 	//setters
 	void setCenter(glm::vec3 val) { this->center = val; }
 	void setRadius(GLfloat val) { this->radius = val; }
+	void setState(int val) { this->state = val; }
 	void setHit(bool val) { this->hit = val; }
 	//getter for imgui
 	GLfloat* getElastic() { return &this->elastic; }

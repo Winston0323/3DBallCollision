@@ -165,7 +165,7 @@ void Ball::boxCollision(GLfloat timeStep, GLfloat& restTime) {
 	}
 	//determination
 	//when there is at least one plain collide
-	if (hit) {
+	if (hit&& hitCollider->GetState()!=5) {
 		//position and velocity on collision
 		//if (f < 0) {
 		//	f = 0.000001;

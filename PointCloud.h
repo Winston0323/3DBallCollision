@@ -24,6 +24,9 @@ private:
 	glm::vec3 center;
 	bool shadeForLight;
 	std::vector<Plain*> plains;
+	glm::mat4 smodel = glm::mat4(1);
+	glm::mat4 rmodel = glm::mat4(1);;
+	glm::mat4 tmodel = glm::mat4(1);;
 
 
 public:

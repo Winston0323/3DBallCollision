@@ -65,7 +65,6 @@ Table::Table(GLfloat width,GLfloat length, glm::vec3 origin)
 	plains.push_back(wallInclineBtmRit);
 	addCollider(wallInclineBtmRit);
 
-	
 	//Bounce balls
 	GLfloat upperGroupCenterX = -10;
 	GLfloat upperGroupCenterY = +2;
@@ -75,13 +74,13 @@ Table::Table(GLfloat width,GLfloat length, glm::vec3 origin)
 	colliders.push_back(bounceBall1->GetCollider());
 
 	//Bounce balls
-	glm::vec3 ballOrigin2 = glm::vec3(upperGroupCenterX, upperGroupCenterY+6, 0);
+	glm::vec3 ballOrigin2 = glm::vec3(upperGroupCenterX, upperGroupCenterY + 5 , 0);
 	bounceBall2 = new BounceBall(ballOrigin2, 2);
 	bbs.push_back(bounceBall2);
 	colliders.push_back(bounceBall2->GetCollider());
 	
 	//Bounce balls
-	glm::vec3 ballOrigin3 = glm::vec3(upperGroupCenterX, upperGroupCenterY - 6, 0);
+	glm::vec3 ballOrigin3 = glm::vec3(upperGroupCenterX, upperGroupCenterY - 5, 0);
 	bounceBall3 = new BounceBall(ballOrigin3, 2);
 	bbs.push_back(bounceBall3);
 	colliders.push_back(bounceBall3->GetCollider());
@@ -97,6 +96,8 @@ Table::Table(GLfloat width,GLfloat length, glm::vec3 origin)
 	colliders.push_back(pedalRight->GetCollider()[0]);
 	colliders.push_back(pedalRight->GetCollider()[1]);
 	
+	reward = new Reward(glm::vec3(0,0,0), 1);
+	colliders.push_back(reward->GetCollider());
 	this->beforceColliderBall = colliders.size();
 	
 	GLfloat distance = 4;
@@ -148,13 +149,19 @@ void Table::draw(const glm::mat4& viewProjMtx, GLuint shader)
 	for (BounceBall* bb : bbs) {
 		bb->draw(viewProjMtx, shader);
 	}
+	drawing = false;
 	for (ColliderBall* cb : cbs) {
 		if (!cb->GetCollider()->GetHit()) {
 			cb->draw(viewProjMtx, shader);
+			drawing = true;
 		}
+	}
+	if (drawing == false) {
+		clear = true;
 	}
 	pedalLeft->draw(viewProjMtx, shader);
 	pedalRight->draw(viewProjMtx, shader);
+	reward->draw(viewProjMtx, shader);
 }
 void Table::update(GLfloat deltaTime) {
 	//for (Plain* p : plains) {
@@ -165,15 +172,26 @@ void Table::update(GLfloat deltaTime) {
 		bb->renderUpdate();
 		bb->update(deltaTime);
 	}
+	if (clear == true) {
+		clearTime = clearTime + deltaTime;
+		if (clearTime > clearLimit) {
+			for (ColliderBall* cb : cbs) {
+				cb->GetCollider()->setHit(false);
+				clearTime = 0.0f;
+				clear = false;
+			}
+		}
+	}
 	//for (int i = 0; i < cbs.size();i++) {
 	//	ColliderBall* cb = this->cbs[i];
 	//	if (cb->GetCollider()->GetHit()) {
 	//		removeBall(i);
 	//	}
 	//}
+	
 	pedalLeft->update(deltaTime);
 	pedalRight->update(deltaTime);
-
+	reward->update(deltaTime);
 }
 void Table::addCollider(Plain* plain) {
 	//colliders.push_back(plain->getCollider()[0]);

@@ -43,11 +43,12 @@ PointCloud::PointCloud(std::string objFilename, GLfloat pointSize)
 		}
 	}
 	maxDist = sqrt(maxDist);
+
 	for (int i = 0; i < points.size(); i++) {
 
-		points[i].x = points[i].x / maxDist * 10 * 0.5;
-		points[i].y = points[i].y / maxDist * 10 * 0.5;
-		points[i].z = points[i].z / maxDist * 10 * 0.5;
+		points[i].x = points[i].x / maxDist;
+		points[i].y = points[i].y / maxDist;
+		points[i].z = points[i].z / maxDist;
 
 	}
 
@@ -104,7 +105,8 @@ void PointCloud::draw(const glm::mat4& viewProjMtx, GLuint shader)
 {
 	// actiavte the shader program 
 	glUseProgram(shader);
-
+	glDisable(GL_CULL_FACE);
+	model = tmodel * rmodel * smodel;
 	// get the locations and send the uniforms to the shader 
 	glUniformMatrix4fv(glGetUniformLocation(shader, "viewProj"), 1, false, (float*)&viewProjMtx);
 	glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_FALSE, (float*)&model);
@@ -124,7 +126,9 @@ void PointCloud::draw(const glm::mat4& viewProjMtx, GLuint shader)
 
 void PointCloud::update()
 {
-	//spin(0.1f);
+	this->scale(1.00001);
+	this->spin(0.1f,glm::vec3(-1,0,0));
+	this->translation(glm::vec3(10,10,0));
 }
 
 void PointCloud::updatePointSize(GLfloat size)
@@ -141,16 +145,16 @@ void PointCloud::updatePointSize(GLfloat size)
 void PointCloud::spin(float angle, glm::vec3 axis)
 {
 	// Update the model matrix by multiplying a rotation matrix
-	model = glm::rotate(glm::radians(angle), axis) * model;
+	rmodel = glm::rotate(glm::radians(angle), axis) * rmodel;
 
 }
 void PointCloud::scale(float level)
 {
-	model = glm::scale(glm::mat4(1.0f), glm::vec3(level)) * model;
+	smodel = glm::scale(glm::mat4(1.0f), glm::vec3(level)) * smodel;
 }
 void PointCloud::translation(glm::vec3 destination)
 {
-	model = glm::translate(glm::mat4(1.0f), destination);
+	tmodel = glm::translate(glm::mat4(1.0f), destination);
 }
 
 void PointCloud::objParser(string objFilename)

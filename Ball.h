@@ -52,6 +52,7 @@ public:
 	void defaultForces();
 	GLfloat* getMass();
 	GLfloat* getGravMult();
+	void setGravMult(GLfloat val) { this->gravMult = val; }
 	GLfloat* getAirResist();
 	GLfloat getRadius();
 	GLfloat* getSphereRadius() { this->radius = *sphere->getRadius(); return sphere->getRadius(); }

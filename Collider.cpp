@@ -140,7 +140,7 @@ std::pair<bool, GLfloat> Collider::checkHit(glm::vec3 pos, glm::vec3 nextPos,glm
 	if (this->oneTime && this->hit) {
 		return std::make_pair(false, -1);
 	}
-	if (this->state == 1) {
+	if (this->state == 1||state == 5) {
 		glm::vec3 temp = pos - this->center;
 		GLfloat dotProduct = glm::dot(temp, vel);
 		if (dotProduct > 0) {

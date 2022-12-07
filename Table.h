@@ -4,6 +4,7 @@
 #include "core.h"
 #include "Plain.h"
 #include "Pedal.h"
+#include "Reward.h"
 #include "BounceBall.h"
 #include "ColliderBall.h"
 
@@ -13,6 +14,10 @@ class Table
 {
 private:
 	int beforceColliderBall;
+	bool drawing = false;
+	bool clear = false;
+	GLfloat clearTime = 0.0f;
+	GLfloat clearLimit = 0.5f;
 	GLfloat size;
 	GLfloat width;
 	GLfloat length;
@@ -36,6 +41,7 @@ private:
 	ColliderBall* colliderBall13;
 	Pedal* pedalLeft;
 	Pedal* pedalRight;
+	Reward* reward;
 	std::vector<Plain*> plains;
 	std::vector<BounceBall*> bbs;
 	std::vector<ColliderBall*> cbs;
@@ -53,6 +59,7 @@ public:
 	std::vector<BounceBall*> getBounceBalls() { return this->bbs; }
 	Pedal* getPedalLeft() { return this->pedalLeft; }
 	Pedal* getPedalRight() { return this->pedalRight; }
+	GLfloat GetClearTime() { return this->clearTime; }
 	void removeBall(int i);
 };
 
