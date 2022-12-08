@@ -55,6 +55,7 @@ public:
 	std::vector<Plain*> genCollider();
 	void translation(glm::vec3 destination);
 	void setLastHit(int hitIndex) { this->lastHit = hitIndex; }
+	void setColor(glm::vec3 val) { this->color = val; }
 	bool checkSide(glm::vec3 pos);
 	//void renderUpdate() { this->represent->translation(this->origin); }
 

@@ -54,17 +54,24 @@ Table::Table(GLfloat width,GLfloat length, glm::vec3 origin)
 	pipeLid = new Plain(4, 5, 4, pipeLidOrigin, true, glm::vec3(0.678f, 0.847f, 1.0f),true);
 	plains.push_back(pipeLid);
 	addCollider(pipeLid);
+	
 	//Bottom incline walls
 	glm::vec3 wallInclineBtmLftOrigin = glm::vec3(this->origin.x + length / 2-2, this->origin.y - width / 2 + 3 + 2.5, this->origin.z);
 	//wallIncline = new Plain(4, 4, wallInclineOrigin, glm::vec3(1, 1, 0), glm::vec3(0.9f, 0.9f, 0.5f));
 	wallInclineBtmLft = new Plain(4, 2, 5, wallInclineBtmLftOrigin, false, glm::vec3(0.9f, 0.9f, 0.5f),false);
 	plains.push_back(wallInclineBtmLft);
+	wallInclineBtmLft->getCollider()[0]->setState(6);
+	wallInclineBtmLft->getCollider()[1]->setState(6);
+	wallInclineBtmLft->setColor(glm::vec3(0, 0.2, 1));
 	addCollider(wallInclineBtmLft);
 
 	glm::vec3 wallInclineBtmRitOrigin = glm::vec3(this->origin.x + length / 2 - 2, this->origin.y + width / 2 - 2.5, this->origin.z);
 	//wallIncline = new Plain(4, 4, wallInclineOrigin, glm::vec3(1, 1, 0), glm::vec3(0.9f, 0.9f, 0.5f));
 	wallInclineBtmRit= new Plain(4, 2, 5, wallInclineBtmRitOrigin, true, glm::vec3(0.9f, 0.9f, 0.5f), false);
 	plains.push_back(wallInclineBtmRit);
+	wallInclineBtmRit->getCollider()[0]->setState(6);
+	wallInclineBtmRit->getCollider()[1]->setState(6);
+	wallInclineBtmRit->setColor(glm::vec3(1, 0.603, 0));
 	addCollider(wallInclineBtmRit);
 
 	//Bounce balls

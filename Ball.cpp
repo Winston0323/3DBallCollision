@@ -170,6 +170,20 @@ void Ball::boxCollision(GLfloat timeStep, GLfloat& restTime) {
 		//if (f < 0) {
 		//	f = 0.000001;
 		//}
+		if (f == -100) {
+			GLfloat yPos = 0;
+			if (this->position.y < 1.5){
+				yPos = 1.5 + (1.5 - position.y);
+			}
+			else {
+				yPos = 1.5 - (position.y - 1.5);
+			}
+			this->position = glm::vec3(this->position.x, yPos, 0);
+			std::cout << hitCollider->GetNorm().x <<hitCollider->GetNorm().y<<std::endl;
+			glm::vec3 calNorm = glm::vec3(-hitCollider->GetNorm().x, hitCollider->GetNorm().y, 0);
+			this->velocity = glm::dot(glm::vec3(-this->velocity.x,-this->velocity.y,0), -hitCollider->GetNorm()) * calNorm;
+			return;
+		}
 		std::cout << "f is " << f << std::endl;
 		glm::vec3 posCol = position + f * timeStep * velocity;
 		glm::vec3 vecCol = velocity + f * timeStep * acc;

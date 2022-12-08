@@ -111,7 +111,7 @@ glm::vec3 Collider::GetNorm(glm::vec3 pos)
 		result = glm::normalize(pos - this->center);
 		return result;
 	}
-	else if(this->state == 2) { //when plain
+	else if(this->state == 2 || this->state == 6) { //when plain
 		//std::cout << "Should not use this getnorm on plain!!!!" << std::endl;
 		if (checkSide(pos)) {
 			result = this->norm;
@@ -159,7 +159,7 @@ std::pair<bool, GLfloat> Collider::checkHit(glm::vec3 pos, glm::vec3 nextPos,glm
 			return std::make_pair(false, -1);
 		}
 	}
-	else if (this->state == 2||this->state ==4) {//when it is a plain
+	else if (this->state == 2||this->state ==4 || this->state == 6) {//when it is a plain
 
 		if (state == 4) {
 			if (checkSide(pos)==false) {
@@ -171,7 +171,7 @@ std::pair<bool, GLfloat> Collider::checkHit(glm::vec3 pos, glm::vec3 nextPos,glm
 			}
 
 		}
-		
+
 		GLfloat dist = glm::length(glm::dot(this->center - nextPos, this->norm));
 		if (dist > rad + EPSILON) {
 			return std::make_pair(false, -1);
@@ -242,7 +242,13 @@ std::pair<bool, GLfloat> Collider::checkHit(glm::vec3 pos, glm::vec3 nextPos,glm
 				ref = det;
 			}
 		}
-		return std::make_pair(true, thit);
+		if (state != 6) {
+			return std::make_pair(true, thit);
+		}
+		else{
+			return std::make_pair(true, -100);
+		}
+		
 		//comput 
 
 	//}
@@ -251,7 +257,7 @@ std::pair<bool, GLfloat> Collider::checkHit(glm::vec3 pos, glm::vec3 nextPos,glm
 	//}
 	//return std::make_pair(false, -1);
 	}
-	else{
+	else if (state==3){
 		glm::vec3 a = this->positions[1] - this->positions[0];
 		glm::vec3 b = pos - this->positions[1];
 		glm::vec3 ba = glm::dot(glm::normalize(a), b) * glm::normalize(a);
@@ -264,6 +270,7 @@ std::pair<bool, GLfloat> Collider::checkHit(glm::vec3 pos, glm::vec3 nextPos,glm
 			return std::make_pair(false, -1);
 		}
 	}
+
 }
 
 
