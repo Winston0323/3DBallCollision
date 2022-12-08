@@ -128,7 +128,7 @@ void PointCloud::update()
 {
 	this->scale(1.00001);
 	this->spin(0.1f,glm::vec3(-1,0,0));
-	this->translation(glm::vec3(10,10,0));
+	//this->translation(glm::vec3(10,10,0));
 }
 
 void PointCloud::updatePointSize(GLfloat size)

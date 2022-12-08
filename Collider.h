@@ -18,9 +18,10 @@ private:
 	GLfloat radius;
 	GLfloat elastic;
 	bool hit = false;
+	bool toggle = false;
 	bool oneTime = false;
 
-	int state; //1 is sphere, 2 is plain, 3 is edge, 4 is one way wall,5 is no response collider
+	int state; //1 is sphere, 2 is plain, 3 is edge, 4 is one way wall, 5 is no response collider, 6 is portal
 	glm::vec3 norm;
 	std::vector<glm::vec3> positions;
 
@@ -76,6 +77,7 @@ public:
 	glm::vec3 GetNorm(glm::vec3 pos);
 	glm::vec3 GetNorm() { return this->norm; }
 	bool GetHit() { return this->hit; }
+	bool GetToggle() { return this->toggle; }
 	glm::vec3 velResp(glm::vec3 pos, GLfloat angularVel);
 	int GetState() { return this->state; }
 	
@@ -83,7 +85,7 @@ public:
 	void setCenter(glm::vec3 val) { this->center = val; }
 	void setRadius(GLfloat val) { this->radius = val; }
 	void setState(int val) { this->state = val; }
-	void setHit(bool val) { this->hit = val; }
+	void setHit(bool val) { this->hit = val; this->toggle = !this->toggle; }
 	//getter for imgui
 	GLfloat* getElastic() { return &this->elastic; }
 	std::pair<bool, GLfloat> checkHit(glm::vec3 pos, glm::vec3 nextPos, glm::vec3 vel,GLfloat rad);

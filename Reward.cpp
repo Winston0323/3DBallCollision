@@ -11,14 +11,16 @@ Reward::Reward(glm::vec3 origin, GLfloat radius)
 	this->extraPointR = new PointCloud(extraPoint,1);
 	this->extraLifeR = new PointCloud(extraLife,1);
 	this->cakeR->spin(90,glm::vec3(0,0,1));
+	this->extendR->spin(90,glm::vec3(0,0,1));
 	this->collider = new Collider(origin, radius,this->elastic);
 	this->collider->setState(5);
-	switchState();
+	this->living = false;
 	states.push_back(cakeR);
-	states.push_back(extendR);
-	states.push_back(magnetR);
-	states.push_back(extraPointR);
-	states.push_back(extraPointR);
+	//states.push_back(extendR);
+	//states.push_back(magnetR);
+	//states.push_back(extraPointR);
+	//states.push_back(extraLifeR);
+	switchState();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -31,26 +33,52 @@ Reward::~Reward()
 ////////////////////////////////////////////////////////////////////////////////
 void Reward::draw(const glm::mat4& viewProjMtx, GLuint shader)
 {
-	represent->draw(viewProjMtx, shader);
+	if (living) {
+		represent->draw(viewProjMtx, shader);
+	}
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Reward::update(GLfloat deltaTime)
 {
 	represent->update();
-	if(this->collider->GetHit() == true){
-		if (increaseTime < increaseLimit) {
-			represent->scale(1 + 0.5 * deltaTime);
-			increaseTime += deltaTime;
+
+	if (living) {
+		if (this->collider->GetHit() == true) {
+
+			if (increaseTime < increaseLimit) {
+				represent->scale(1 + 0.5 * deltaTime);
+				increaseTime += deltaTime;
+			}
+			else {
+				increaseTime = 0;
+				this->collider->setHit(false);
+				this->die();
+			}
 		}
-		else {
-			increaseTime = 0; 
-			this->collider->setHit(false);
+		contextTime += deltaTime;
+		std::cout << contextTime << std::endl;
+		if (contextTime > contextLimit) {
+			this->die();
+			contextTime = 0;
+			living = false;
 		}
+
+	}
+	else {
+		this->collider->setHit(false);
 	}
 }
 void Reward::switchState() {
 	int index = std::rand() % this->states.size();
-	
 	this->represent = states[index];
+	this->represent->clearScale();
 }
-
+void Reward::spawn() {
+	std::cout << "spawn" << std::endl;
+	this->living = true;  
+	this->represent->clearScale();
+}
+void Reward::die() {
+	std::cout << "die" << std::endl;
+	this->living = false;
+}

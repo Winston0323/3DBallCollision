@@ -11,11 +11,13 @@
 class Reward
 {
 private:
-
+	bool living;
 	GLfloat elastic;
 	GLfloat radius;
-	GLfloat increaseTime;
-	GLfloat increaseLimit = 1.0f;
+	GLfloat increaseTime = 0.0f;
+	GLfloat increaseLimit = 5.0f;
+	GLfloat contextTime = 0.0f;
+	GLfloat contextLimit = 30.0f;
 	glm::vec3 origin;
 	PointCloud* represent;
 	PointCloud* cakeR;
@@ -44,10 +46,13 @@ public:
 	GLfloat GetElastic()	{ return this->elastic; }
 	GLfloat GetRadius()		{ return this->radius; }
 	Collider* GetCollider() { return this->collider; }
+	bool GetLiving() { return this->living; }
 
 	//getter for imgui
 	GLfloat* getOriginX()	{ return &this->origin.x; }
 	GLfloat* getOriginY()	{ return &this->origin.y; }
+	void spawn();
+	void die();
 	void switchState();
 	void renderUpdate() { this->translate(this->origin); }
 	void translate(glm::vec3 destination) {

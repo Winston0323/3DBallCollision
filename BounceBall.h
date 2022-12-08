@@ -11,7 +11,7 @@
 class BounceBall
 {
 private:
-
+	bool toggle;
 	GLfloat elastic;
 	GLfloat radius;
 	glm::vec3 origin;
@@ -31,6 +31,7 @@ public:
 	void update(GLfloat deltaTime);
 	//getters
 	glm::vec3 GetOrigin()	{ return origin; }
+	bool GetToggle()	{ return this->toggle; }
 	GLfloat GetElastic()	{ return this->elastic; }
 	GLfloat GetRadius()		{ return this->radius; }
 	Collider* GetCollider() { return this->collider; }

@@ -99,7 +99,6 @@ Table::Table(GLfloat width,GLfloat length, glm::vec3 origin)
 	reward = new Reward(glm::vec3(0,0,0), 1);
 	colliders.push_back(reward->GetCollider());
 	this->beforceColliderBall = colliders.size();
-	
 	GLfloat distance = 4;
 	int number = 5;
 	GLfloat cBallCenterY = 1;
@@ -168,9 +167,16 @@ void Table::update(GLfloat deltaTime) {
 	//	p->renderUpdate();
 	//
 	//}
+	allToggle = true;
 	for (BounceBall* bb : bbs) {
 		bb->renderUpdate();
 		bb->update(deltaTime);
+		if (!bb->GetToggle()) {
+			allToggle = false;
+		}
+	}
+	if (allToggle && !reward->GetLiving()) {
+		reward->spawn();
 	}
 	if (clear == true) {
 		clearTime = clearTime + deltaTime;

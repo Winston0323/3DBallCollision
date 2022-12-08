@@ -16,6 +16,7 @@ private:
 	int beforceColliderBall;
 	bool drawing = false;
 	bool clear = false;
+	bool allToggle = false;
 	GLfloat clearTime = 0.0f;
 	GLfloat clearLimit = 0.5f;
 	GLfloat size;

@@ -40,6 +40,7 @@ public:
 	void spin(float angle, glm::vec3 axis);
 	void objParser(string objFilename);
 	void scale(float level);
+	void clearScale() { this->smodel = glm::mat4(1); }
 	void translation(glm::vec3 destination);
 	glm::vec3 getCenter();
 	void setCenter(glm::vec3 center);

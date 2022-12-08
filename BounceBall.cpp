@@ -7,6 +7,7 @@ BounceBall::BounceBall(glm::vec3 origin, GLfloat radius)
 	this->elastic = DEFAULT_BALL_ELASTIC;
 	this->represent = new Sphere(this->radius, glm::vec3(1.0,0.95,1));
 	this->collider = new Collider(origin, radius,this->elastic);
+	//this->toggle = true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -25,7 +26,11 @@ void BounceBall::draw(const glm::mat4& viewProjMtx, GLuint shader)
 ////////////////////////////////////////////////////////////////////////////////
 void BounceBall::update(GLfloat deltaTime)
 {
-	if (this->collider->GetHit()) {
-		this->represent->changeColor(glm::vec3(0,0,1));
+	this->toggle = this->collider->GetToggle();
+	if (this->toggle) {
+		this->represent->changeColor(glm::vec3(0, 0, 1));
+	}
+	else {
+		this->represent->changeColor(glm::vec3(1.0, 0.95, 1));
 	}
 }

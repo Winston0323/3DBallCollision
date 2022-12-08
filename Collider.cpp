@@ -251,7 +251,7 @@ std::pair<bool, GLfloat> Collider::checkHit(glm::vec3 pos, glm::vec3 nextPos,glm
 	//}
 	//return std::make_pair(false, -1);
 	}
-	else {
+	else{
 		glm::vec3 a = this->positions[1] - this->positions[0];
 		glm::vec3 b = pos - this->positions[1];
 		glm::vec3 ba = glm::dot(glm::normalize(a), b) * glm::normalize(a);
