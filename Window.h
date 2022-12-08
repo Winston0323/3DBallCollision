@@ -70,6 +70,7 @@ public:
 	static void mouse_callback(GLFWwindow* window, int button, int action, int mods);
 	static void cursor_callback(GLFWwindow* window, double currX, double currY);
 	static void drawGUI();
+	static void resetGame();
 };
 
 ////////////////////////////////////////////////////////////////////////////////

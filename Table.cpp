@@ -7,37 +7,38 @@ Table::Table(GLfloat width,GLfloat length, glm::vec3 origin)
 	this->origin = origin;
 
 	//Table top
+	glm::vec3 wallColor = glm::vec3(0.701, 0.701, 0.8);
 	glm::vec3 tableOrigin = glm::vec3(origin);
-	tableTop = new Plain(width, length, tableOrigin ,glm::vec3(0, 0, 1), glm::vec3(0.9f, 0.9f, 0.5f));
+	tableTop = new Plain(width, length, tableOrigin ,glm::vec3(0, 0, 1), wallColor);
 	plains.push_back(tableTop);
 
 	//Table top
 	glm::vec3 tableUpOrigin = glm::vec3(this->origin.x,this->origin.y + width/2, this->origin.z);
-	tableUp = new Plain(4, length, tableUpOrigin, glm::vec3(0, -1, 0), glm::vec3(0.9f, 0.9f, 0.5f));
+	tableUp = new Plain(4, length, tableUpOrigin, glm::vec3(0, -1, 0), wallColor);
 	plains.push_back(tableUp);
 	addCollider(tableUp);
 	//Table bottom
 	glm::vec3 tableBtmOrigin = glm::vec3(this->origin.x, this->origin.y - width / 2, this->origin.z);
-	tableBtm = new Plain(4, length, tableBtmOrigin, glm::vec3(0, 1, 0), glm::vec3(0.9f, 0.9f, 0.5f));
+	tableBtm = new Plain(4, length, tableBtmOrigin, glm::vec3(0, 1, 0), wallColor);
 	plains.push_back(tableBtm);
 	addCollider(tableBtm);
 	//Table left
 	glm::vec3 tableLftOrigin = glm::vec3(this->origin.x - length/2 , this->origin.y, this->origin.z);
-	tableLeft = new Plain(width, 4, tableLftOrigin, glm::vec3(1, 0, 0), glm::vec3(0.9f, 0.9f, 0.5f));
+	tableLeft = new Plain(width, 4, tableLftOrigin, glm::vec3(1, 0, 0), wallColor);
 	plains.push_back(tableLeft);
 	addCollider(tableLeft);
 	//Table leftTube
 	glm::vec3 tableDownTubeOrigin = glm::vec3(this->origin.x+2.5 , this->origin.y -width/2+3, this->origin.z);
-	leftTube = new Plain(4, length-5, tableDownTubeOrigin, glm::vec3(0, -1, 0), glm::vec3(0.9f, 0.9f, 0.5f));
+	leftTube = new Plain(4, length-5, tableDownTubeOrigin, glm::vec3(0, -1, 0), wallColor);
 	plains.push_back(leftTube);
 	addCollider(leftTube);
 
-	leftTubeOp = new Plain(4, length - 5, tableDownTubeOrigin, glm::vec3(0, 1, 0), glm::vec3(0.9f, 0.9f, 0.5f));
+	leftTubeOp = new Plain(4, length - 5, tableDownTubeOrigin, glm::vec3(0, 1, 0), wallColor);
 	plains.push_back(leftTubeOp);
 	addCollider(leftTubeOp);
 	//Table right
 	glm::vec3 tableRHTOrigin = glm::vec3(this->origin.x + length / 2, this->origin.y-width/2+1.5, this->origin.z);
-	tableRight = new Plain(3, 4, tableRHTOrigin, glm::vec3(-1, 0, 0), glm::vec3(0.9f, 0.9f, 0.5f));
+	tableRight = new Plain(3, 4, tableRHTOrigin, glm::vec3(-1, 0, 0), wallColor);
 	tableRight->getCollider()[0]->setElastic(-0.5);
 	tableRight->getCollider()[1]->setElastic(-0.5);
 	plains.push_back(tableRight);
@@ -45,7 +46,7 @@ Table::Table(GLfloat width,GLfloat length, glm::vec3 origin)
 	//wall left corner incline
 	glm::vec3 wallInclineOrigin = glm::vec3(this->origin.x- length / 2 + 2.5, this->origin.y - width / 2 + 1, this->origin.z);
 	//wallIncline = new Plain(4, 4, wallInclineOrigin, glm::vec3(1, 1, 0), glm::vec3(0.9f, 0.9f, 0.5f));
-	wallIncline = new Plain(4,5,4,wallInclineOrigin, true ,glm::vec3(0.9f, 0.9f, 0.5f),false);
+	wallIncline = new Plain(4,5,4,wallInclineOrigin, true , wallColor,false);
 	plains.push_back(wallIncline);
 	addCollider(wallIncline);
 	//pipe Lid
@@ -58,20 +59,22 @@ Table::Table(GLfloat width,GLfloat length, glm::vec3 origin)
 	//Bottom incline walls
 	glm::vec3 wallInclineBtmLftOrigin = glm::vec3(this->origin.x + length / 2-2, this->origin.y - width / 2 + 3 + 2.5, this->origin.z);
 	//wallIncline = new Plain(4, 4, wallInclineOrigin, glm::vec3(1, 1, 0), glm::vec3(0.9f, 0.9f, 0.5f));
-	wallInclineBtmLft = new Plain(4, 2, 5, wallInclineBtmLftOrigin, false, glm::vec3(0.9f, 0.9f, 0.5f),false);
+	wallInclineBtmLft = new Plain(4, 2, 5, wallInclineBtmLftOrigin, false, wallColor,false);
 	plains.push_back(wallInclineBtmLft);
 	wallInclineBtmLft->getCollider()[0]->setState(6);
 	wallInclineBtmLft->getCollider()[1]->setState(6);
 	wallInclineBtmLft->setColor(glm::vec3(0, 0.2, 1));
+	wallInclineBtmLft->setPartVel(glm::vec3(-2, 1, 0));
 	addCollider(wallInclineBtmLft);
 
 	glm::vec3 wallInclineBtmRitOrigin = glm::vec3(this->origin.x + length / 2 - 2, this->origin.y + width / 2 - 2.5, this->origin.z);
 	//wallIncline = new Plain(4, 4, wallInclineOrigin, glm::vec3(1, 1, 0), glm::vec3(0.9f, 0.9f, 0.5f));
-	wallInclineBtmRit= new Plain(4, 2, 5, wallInclineBtmRitOrigin, true, glm::vec3(0.9f, 0.9f, 0.5f), false);
+	wallInclineBtmRit= new Plain(4, 2, 5, wallInclineBtmRitOrigin, true, wallColor, false);
 	plains.push_back(wallInclineBtmRit);
 	wallInclineBtmRit->getCollider()[0]->setState(6);
 	wallInclineBtmRit->getCollider()[1]->setState(6);
 	wallInclineBtmRit->setColor(glm::vec3(1, 0.603, 0));
+	wallInclineBtmRit->setPartVel(glm::vec3(-2, -1, 0));
 	addCollider(wallInclineBtmRit);
 
 	//Bounce balls
@@ -149,10 +152,10 @@ Table::~Table()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Table::draw(const glm::mat4& viewProjMtx, GLuint shader)
+void Table::draw(const glm::mat4& viewProjMtx, GLuint shader, GLuint pShader)
 {
 	for (Plain* p : plains) {
-		p->draw(viewProjMtx, shader);
+		p->draw(viewProjMtx, shader, pShader);
 	}
 	for (BounceBall* bb : bbs) {
 		bb->draw(viewProjMtx, shader);
@@ -172,10 +175,10 @@ void Table::draw(const glm::mat4& viewProjMtx, GLuint shader)
 	reward->draw(viewProjMtx, shader);
 }
 void Table::update(GLfloat deltaTime) {
-	//for (Plain* p : plains) {
-	//	p->renderUpdate();
-	//
-	//}
+
+	wallInclineBtmLft->update(deltaTime);
+	wallInclineBtmRit->update(deltaTime);
+
 	allToggle = true;
 	for (BounceBall* bb : bbs) {
 		bb->renderUpdate();

@@ -137,8 +137,10 @@ void Ball::boxCollision(GLfloat timeStep, GLfloat& restTime) {
 	Collider* hitCollider;
 	bool hit = false;
 	int i = 0;
-	for (Collider* collider : this->colliders){
-		
+	#pragma omp parallel
+	#pragma omp for
+	for (int i = 0; i < this->colliders.size();i++) {
+		Collider* collider = this->colliders[i];
 		if (collider->checkHit(this->position, nextPos, 
 				this->velocity,this->radius).first) {//check if hit
 			if (collider->checkHit(this->position, nextPos, 
@@ -148,20 +150,10 @@ void Ball::boxCollision(GLfloat timeStep, GLfloat& restTime) {
 				hitCollider = collider;//set collider 
 				hitCollider->setHit(true);
 				hit = true;//set hit
-				//if (hitCollider->GetState() == 1) {
-				//	printf("Hitwith sphere %d\n", i);
-				//}
-				//else if (hitCollider->GetState() == 2) {
-				//	printf("Hitwith plain %d\n", i);
-				//}
-				//else if (hitCollider->GetState() == 3) {
-				//	printf("Hitwith edge %d\n", i);
-				//}
-				
 			}
 			
 		}
-		i++;
+		
 	}
 	//determination
 	//when there is at least one plain collide
@@ -319,7 +311,7 @@ GLfloat* Ball::getVelZ()
 ////////////////////////////////////////////////////////////////////////////////
 void Ball::restoreDefault()
 {
-	this->position = glm::vec3(+23,-12,0);
+	this->position = glm::vec3(+21.5,-12,0);
 	this->velocity = glm::vec3(0);
 	this->windVelocity = glm::vec3(0);
 	this->mass = DEFAULT_MASS;

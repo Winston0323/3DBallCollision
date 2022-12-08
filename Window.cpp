@@ -272,7 +272,7 @@ void Window::displayCallback(GLFWwindow* window)
 
 	// STEP3 Render the object.
 	//test->draw(Cam->GetViewProjectMtx(), Window::shaderProgram);
-	table->draw(Cam->GetViewProjectMtx(), Window::shaderProgram);
+	table->draw(Cam->GetViewProjectMtx(), Window::shaderProgram, Window::pointShaderProgram);
 	ball->draw(Cam->GetViewProjectMtx(), Window::shaderProgram, Window::pointShaderProgram);
 	drawGUI();
 
@@ -449,32 +449,29 @@ void Window::drawGUI() {
 	}
 
 
-	if (ImGui::Button("start")) {
-		simStart = !simStart;
-	}
-	if (ImGui::Button("restore default")) {
-		//test->restoreDefault();
-		Cam->restoreDefault();
-		ball->restoreDefault();
-		simStart = false;
-	}
-
-
 	ImGui::End();
 	ImGui::Begin("Scores");                          // Create a window called "Hello, world!" and append into it.
 
 	ImGui::SetWindowSize(ImVec2(350, Window::height / 2));
 	ImGui::SetWindowPos(ImVec2(0, Window::height-500));
+	if (ImGui::Button("start")) {
+		simStart = !simStart;
+	}
 	
-	ImGui::Text("Speed:%f" ,speed);
-	
-	ImGui::Text("Launch %d", launch);
-	
-	
-	
+
+	if (ImGui::Button("restore default")) {
+		resetGame();
+	}
+	ImGui::Text("Speed:%f", speed);
 	ImGui::End();
 	//draw imgui
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
+}
+
+void Window::resetGame() {
+	Cam->restoreDefault();
+	ball->restoreDefault();
+	//simStart = false;
 }

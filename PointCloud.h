@@ -44,6 +44,7 @@ public:
 	void translation(glm::vec3 destination);
 	glm::vec3 getCenter();
 	void setCenter(glm::vec3 center);
+	void setColor(glm::vec3 val) { this->color = val; }
 	std::vector<Plain*> getPlains() { return this->plains; }
 
 };

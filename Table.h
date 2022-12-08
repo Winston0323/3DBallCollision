@@ -53,7 +53,7 @@ private:
 public:
 	Table(GLfloat width, GLfloat length, glm::vec3 origin);
 	~Table();
-	void draw(const glm::mat4& viewProjMtx, GLuint shader);
+	void draw(const glm::mat4& viewProjMtx, GLuint shader, GLuint pShader);
 	void update(GLfloat deltaTime);
 	std::vector<Plain*> getPlains() { return this->plains; }
 	std::vector<Collider*> getCollider() { return this->colliders; }

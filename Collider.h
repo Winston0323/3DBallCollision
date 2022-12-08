@@ -18,7 +18,7 @@ private:
 	GLfloat radius;
 	GLfloat elastic;
 	bool hit = false;
-	bool toggle = false;
+	bool toggle = true;
 	bool oneTime = false;
 
 	int state; //1 is sphere, 2 is plain, 3 is edge, 4 is one way wall, 5 is no response collider, 6 is portal

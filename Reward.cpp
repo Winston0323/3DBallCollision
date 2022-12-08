@@ -11,6 +11,7 @@ Reward::Reward(glm::vec3 origin, GLfloat radius)
 	this->extraPointR = new PointCloud(extraPoint,1);
 	this->extraLifeR = new PointCloud(extraLife,1);
 	this->cakeR->spin(90,glm::vec3(0,0,1));
+	this->cakeR->setColor(glm::vec3(0.168, 0.090, 0));
 	this->extendR->spin(90,glm::vec3(0,0,1));
 	this->collider = new Collider(origin, radius,this->elastic);
 	this->collider->setState(5);

@@ -44,7 +44,7 @@ void Camera::Reset() {
 
 	Distance = 75.0f;
 	Azimuth = 0.0f;
-	Incline = 0.0f;
+	Incline = -15.0f;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -52,5 +52,5 @@ void Camera::restoreDefault() {
 
 	Distance = 75.0f;
 	Azimuth = 0.0f;
-	Incline = 0.0f;
+	Incline = -15.0f;
 }

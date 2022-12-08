@@ -441,11 +441,12 @@ Plain::Plain(GLfloat width, GLfloat length, GLfloat diff, glm::vec3 origin, bool
 		};
 	
 	}
-
+	
 	this->norm =  glm::normalize(glm::cross(positions[2] - positions[0],
 		positions[1] - positions[0]));
 	std::cout << norm.x << " ," << norm.y << " ," << norm.z << std::endl;
-
+	this->parts = new ParticleSystem(1,this->color, 0,3,1);
+	this->hasPart = true;
 	// Specify normals
 	normals = {
 		norm,
@@ -534,11 +535,11 @@ Plain::~Plain()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void Plain::draw(const glm::mat4& viewProjMtx, GLuint shader)
+void Plain::draw(const glm::mat4& viewProjMtx, GLuint shader, GLuint pShader)
 {
-	//glEnable(GL_CULL_FACE);
-	//glCullFace(GL_BACK);
-	//colliders[0]->draw(viewProjMtx, shader);
+	if (hasPart) {
+		parts->draw(viewProjMtx, pShader);
+	}
 	glDisable(GL_CULL_FACE);
 	// actiavte the shader program 
 	glUseProgram(shader);
@@ -564,6 +565,15 @@ void Plain::draw(const glm::mat4& viewProjMtx, GLuint shader)
 void Plain::update()
 {
 
+}
+////////////////////////////////////////////////////////////////////////////////
+
+void Plain::update(GLfloat deltaTime)
+{
+	if (hasPart) {
+		
+		parts->update(deltaTime,this->positions[0], this->positions[3], this->partVel);
+	}
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Plain::spin(GLfloat angle, glm::vec3 axis)

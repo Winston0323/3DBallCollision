@@ -4,6 +4,7 @@
 
 #include "core.h"
 #include "Collider.h"
+#include "ParticleSystem.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -17,8 +18,8 @@ private:
 	glm::vec3 color;
 	glm::vec3 origin;
 	glm::vec3 norm;
+	bool hasPart = false;
 	GLfloat elastic = DEFAULT_WALL_ELASTIC;
-	//bool isSphere;
 
 	// Plain Information
 	std::vector<glm::vec3> positions;
@@ -29,7 +30,9 @@ private:
 	std::vector<Collider*> colliders;
 	bool isBox = false;
 	int lastHit = -1;
+	glm::vec3 partVel;
 public:
+	ParticleSystem* parts;
 	Plain(GLfloat size, glm::vec3 origin, glm::vec3 color);
 	Plain(GLfloat size, glm::vec3 origin, glm::vec3 normal, glm::vec3 color);
 	Plain(GLfloat width,GLfloat height, glm::vec3 origin, glm::vec3 normal, glm::vec3 color);
@@ -38,11 +41,13 @@ public:
 
 	~Plain();
 
-	void draw(const glm::mat4& viewProjMtx, GLuint shader);
+	void draw(const glm::mat4& viewProjMtx, GLuint shader, GLuint pShader);
 	void update();
+	void update(GLfloat deltaTime);
 	void spin(GLfloat deg, glm::vec3 axis);
 	void setNorm(glm::vec3 norm) { this->norm = norm; }
 	void setElastic(GLfloat val) { this->elastic = val; }
+	void setPartVel(glm::vec3 val) { this->partVel = val; }
 	glm::vec3 getColor() { return color; }
 	//bool checkHit(glm::vec3 pos, glm::vec3 nextPos, glm::vec3 vel, GLfloat radius);
 	bool checkHit(glm::vec3 pos, glm::vec3 nextPos, GLfloat radius);
@@ -55,7 +60,10 @@ public:
 	std::vector<Plain*> genCollider();
 	void translation(glm::vec3 destination);
 	void setLastHit(int hitIndex) { this->lastHit = hitIndex; }
-	void setColor(glm::vec3 val) { this->color = val; }
+	void setColor(glm::vec3 val) { 
+		this->color = val; 
+		this->parts->setColor(val); 
+	}
 	bool checkSide(glm::vec3 pos);
 	//void renderUpdate() { this->represent->translation(this->origin); }
 
