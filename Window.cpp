@@ -12,8 +12,11 @@ int Window::height;
 const char* Window::windowTitle = "Cloth_Simulator";
 bool Window::simStart = false;
 bool Window::RK4 = true;
+bool Window::launching = false;
+bool Window::launch = false;
 
 //time
+GLfloat Window::speed = 0.0f;
 GLfloat Window::lastFrameTime = 0.0f;
 GLfloat Window::thisFrameTime = 0.0f;
 GLfloat Window::deltaTime = 0.0f;
@@ -188,6 +191,13 @@ void Window::resizeCallback(GLFWwindow* window, int width, int height)
 ////////////////////////////////////////////////////////////////////////////////
 void Window::idleCallback()
 {
+
+	//if (ball->GetPos().x > 22 && ball->GetPos().y < -10.5) {
+	//	ball->changeColor(glm::vec3(1,0,0));
+	//}
+	//else {
+	//	ball->changeColor(glm::vec3(0.3, 0.3, 0.4));
+	//}
 	//STEP 2 update
 	if (simStart) {
 		//calculate time
@@ -216,8 +226,28 @@ void Window::idleCallback()
 			}
 			else {
 				ball->setGravMult(1);
-			
 			}
+			if (launching) {
+				if (speed < 150) {
+					speed = speed + deltaTime * 150;
+					//std::cout << "launching" << std::endl;
+				}
+			}
+			if (ball->GetPos().x > 22 && ball->GetPos().y < -10.5) {
+				ball->changeColor(glm::vec3(1, 0, 0));
+				if (launch == true) {
+					std::cout << "speed is"<< speed << std::endl;
+					ball->setVelocityX(speed);
+					//ball->changeColor(glm::vec3(0, 0, 1));
+					speed = 0;
+					launch = false;
+					launching = false;
+				}
+			}
+			else {
+				ball->changeColor(glm::vec3(0.3, 0.3, 0.4));
+			}
+
 		}
 		table->update(simTimeStep);
 	}
@@ -295,8 +325,11 @@ void Window::keyCallback(GLFWwindow* window, int key, int scancode, int action, 
 			std::cout << "Pressing" << std::endl;
 			table->getPedalRight()->setState(1);
 			break;
-		case GLFW_KEY_DOWN:
-			break;
+
+		case GLFW_KEY_SPACE:
+			std::cout << "update speed" << std::endl;
+			speed = 0;
+			launching = true;
 		default:
 			break;
 		}
@@ -315,8 +348,11 @@ void Window::keyCallback(GLFWwindow* window, int key, int scancode, int action, 
 			std::cout << "Releasing" << std::endl;
 			table->getPedalRight()->setState(3);
 			break;
-		case GLFW_KEY_DOWN:
-			break;
+
+		case GLFW_KEY_SPACE:
+			std::cout << "update speed" << std::endl;
+			launching = false;
+			launch = true;
 		default:
 			break;
 		}
@@ -424,6 +460,18 @@ void Window::drawGUI() {
 	}
 
 
+	ImGui::End();
+	ImGui::Begin("Scores");                          // Create a window called "Hello, world!" and append into it.
+
+	ImGui::SetWindowSize(ImVec2(350, Window::height / 2));
+	ImGui::SetWindowPos(ImVec2(0, Window::height-500));
+	
+	ImGui::Text("Speed:%f" ,speed);
+	
+	ImGui::Text("Launch %d", launch);
+	
+	
+	
 	ImGui::End();
 	//draw imgui
 	ImGui::Render();

@@ -7,7 +7,6 @@ BounceBall::BounceBall(glm::vec3 origin, GLfloat radius)
 	this->elastic = DEFAULT_BALL_ELASTIC;
 	this->represent = new Sphere(this->radius, glm::vec3(1.0,0.95,1));
 	this->collider = new Collider(origin, radius,this->elastic);
-	//this->toggle = true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

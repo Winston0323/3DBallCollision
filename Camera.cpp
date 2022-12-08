@@ -19,7 +19,7 @@ void Camera::Update() {
 	glm::mat4 world(1);
 	world[3][2] = Distance;
 	world = glm::eulerAngleY(glm::radians(-Azimuth)) * glm::eulerAngleX(glm::radians(-Incline)) * world;
-	//world = glm::rotate(glm::radians(90.0f),glm::vec3 (0,0,1)) * world;
+	world = glm::rotate(glm::radians(90.0f),glm::vec3 (0,0,1)) * world;
 	
 	this->camPos = world[3];
 	
@@ -42,7 +42,7 @@ void Camera::Reset() {
 	NearClip = 0.1f;
 	FarClip = 100.0f;
 
-	Distance = 60.0f;
+	Distance = 75.0f;
 	Azimuth = 0.0f;
 	Incline = 0.0f;
 }

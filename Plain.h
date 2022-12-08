@@ -42,6 +42,7 @@ public:
 	void update();
 	void spin(GLfloat deg, glm::vec3 axis);
 	void setNorm(glm::vec3 norm) { this->norm = norm; }
+	void setElastic(GLfloat val) { this->elastic = val; }
 	glm::vec3 getColor() { return color; }
 	//bool checkHit(glm::vec3 pos, glm::vec3 nextPos, glm::vec3 vel, GLfloat radius);
 	bool checkHit(glm::vec3 pos, glm::vec3 nextPos, GLfloat radius);

@@ -56,7 +56,7 @@ void Reward::update(GLfloat deltaTime)
 			}
 		}
 		contextTime += deltaTime;
-		std::cout << contextTime << std::endl;
+		//std::cout << contextTime << std::endl;
 		if (contextTime > contextLimit) {
 			this->die();
 			contextTime = 0;
@@ -71,6 +71,7 @@ void Reward::update(GLfloat deltaTime)
 void Reward::switchState() {
 	int index = std::rand() % this->states.size();
 	this->represent = states[index];
+	this->represent->translation(origin);
 	this->represent->clearScale();
 }
 void Reward::spawn() {

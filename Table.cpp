@@ -38,6 +38,8 @@ Table::Table(GLfloat width,GLfloat length, glm::vec3 origin)
 	//Table right
 	glm::vec3 tableRHTOrigin = glm::vec3(this->origin.x + length / 2, this->origin.y-width/2+1.5, this->origin.z);
 	tableRight = new Plain(3, 4, tableRHTOrigin, glm::vec3(-1, 0, 0), glm::vec3(0.9f, 0.9f, 0.5f));
+	tableRight->getCollider()[0]->setElastic(-0.5);
+	tableRight->getCollider()[1]->setElastic(-0.5);
 	plains.push_back(tableRight);
 	addCollider(tableRight);
 	//wall left corner incline
@@ -96,7 +98,7 @@ Table::Table(GLfloat width,GLfloat length, glm::vec3 origin)
 	colliders.push_back(pedalRight->GetCollider()[0]);
 	colliders.push_back(pedalRight->GetCollider()[1]);
 	
-	reward = new Reward(glm::vec3(0,0,0), 1);
+	reward = new Reward(glm::vec3(upperGroupCenterX, upperGroupCenterY,0), 1);
 	colliders.push_back(reward->GetCollider());
 	this->beforceColliderBall = colliders.size();
 	GLfloat distance = 4;

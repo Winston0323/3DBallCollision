@@ -24,6 +24,9 @@ public:
 	static const char* windowTitle;
 	static bool simStart;
 	static bool RK4; 
+	static bool launching;
+	static bool launch;
+	static GLfloat speed;
 	//time
 	static GLfloat lastFrameTime;
 	static GLfloat thisFrameTime;

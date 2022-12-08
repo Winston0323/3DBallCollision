@@ -46,13 +46,15 @@ public:
 	void boxCollision(GLfloat timeStep, GLfloat& restTime);
 	void resting();
 	void renderUpdate();
-
+	void changeColor(glm::vec3 color) { this->sphere->changeColor(color); }
 	std::vector<glm::vec3> intRK( GLfloat timeStep);
 
 	void defaultForces();
 	GLfloat* getMass();
 	GLfloat* getGravMult();
 	void setGravMult(GLfloat val) { this->gravMult = val; }
+	void setVelocityX(GLfloat val) { 
+		this->velocity = glm::vec3(-val, 0, 0); }
 	GLfloat* getAirResist();
 	GLfloat getRadius();
 	GLfloat* getSphereRadius() { this->radius = *sphere->getRadius(); return sphere->getRadius(); }

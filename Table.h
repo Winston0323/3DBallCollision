@@ -18,7 +18,7 @@ private:
 	bool clear = false;
 	bool allToggle = false;
 	GLfloat clearTime = 0.0f;
-	GLfloat clearLimit = 0.5f;
+	GLfloat clearLimit = 5.0f;
 	GLfloat size;
 	GLfloat width;
 	GLfloat length;

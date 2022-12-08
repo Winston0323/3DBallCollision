@@ -18,7 +18,7 @@ private:
 	GLfloat radius;
 	GLfloat elastic;
 	bool hit = false;
-	bool toggle = false;
+	bool toggle = true;
 	bool oneTime = false;
 
 	int state; //1 is sphere, 2 is plain, 3 is edge, 4 is one way wall, 5 is no response collider, 6 is portal
@@ -85,6 +85,7 @@ public:
 	void setCenter(glm::vec3 val) { this->center = val; }
 	void setRadius(GLfloat val) { this->radius = val; }
 	void setState(int val) { this->state = val; }
+	void setElastic(GLfloat val) { this->elastic = val; }
 	void setHit(bool val) { this->hit = val; this->toggle = !this->toggle; }
 	//getter for imgui
 	GLfloat* getElastic() { return &this->elastic; }
