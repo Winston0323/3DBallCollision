@@ -15,8 +15,10 @@
 class Camera {
 public:
 	Camera();
-
-	void Update();
+	GLfloat flipTime = 0.0f;
+	GLfloat flipLimit = 5.0f;
+	bool startFlip = false;
+	void Update(GLfloat deltaTime);
 	void Reset();
 	void restoreDefault();
 
@@ -25,7 +27,7 @@ public:
 	void SetDistance(float d) { Distance = d; }
 	void SetAzimuth(float a) { Azimuth = a; }
 	void SetIncline(float i) { Incline = i; }
-
+	void setStartFlip(bool val) { this->startFlip = true; }
 	float GetDistance() { return Distance; }
 	float GetAzimuth() { return Azimuth; }
 	float GetIncline() { return Incline; }
@@ -34,7 +36,24 @@ public:
 	const glm::mat4& GetView() { return View; }
 	const glm::mat4& GetProject() { return Project; }
 	const glm::mat4& GetViewProjectMtx() { return ViewProjectMtx; }
-
+	void flipping(GLfloat deltaTime) {
+		
+		if (flipTime > flipLimit) {
+			std::cout << "stop flipping" << std::endl;
+			this->SetAzimuth(0);
+			flipTime = 0;
+			this->startFlip = false;
+		}
+		else {
+			
+			if (startFlip) {
+				std::cout << "start flipping" << flipTime << std::endl;
+				this->flipTime += deltaTime;
+				this->SetAzimuth(180);
+			}
+		}
+	
+	}
 private:
 	// Perspective controls
 	float FOV;			// Field of View Angle (degrees)
@@ -52,6 +71,7 @@ private:
 	glm::mat4 ViewProjectMtx;
 	glm::mat4 View;
 	glm::mat4 Project;
+	
 };
 
 ////////////////////////////////////////////////////////////////////////////////

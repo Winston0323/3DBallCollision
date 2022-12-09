@@ -221,12 +221,7 @@ void Window::idleCallback()
 			//table->update(simTimeStep);
 			ball->update(simTimeStep,restTime);
 			calTime += restTime;
-			if (table->GetClearTime() > 0) {
-				ball->setGravMult(-10);
-			}
-			else {
-				ball->setGravMult(1);
-			}
+
 			if (launching) {
 				if (speed < 150) {
 					speed = speed + deltaTime * 150;
@@ -246,6 +241,17 @@ void Window::idleCallback()
 			}
 			else {
 				ball->changeColor(glm::vec3(0.3, 0.3, 0.4));
+				if (table->GetClearTime() > 0) {
+					ball->setGravMult(-10);
+					ball->changeColor(glm::vec3(0.1, 0.2, 1));
+				}
+				else {
+					ball->setGravMult(1);
+					ball->changeColor(glm::vec3(0.3, 0.3, 0.4));
+				}
+			}
+			if (table->rewardStatus()) {
+				Cam->setStartFlip(true);
 			}
 
 		}
@@ -260,7 +266,7 @@ void Window::idleCallback()
 
 	
 	//STEP 2.4 always update values
-	Cam->Update();
+	Cam->Update(deltaTime);
 	
 
 }
@@ -339,6 +345,7 @@ void Window::keyCallback(GLFWwindow* window, int key, int scancode, int action, 
 		switch (key)
 		{
 		case GLFW_KEY_D:
+			Cam->setStartFlip(true);
 			break;
 		case GLFW_KEY_LEFT:
 			std::cout << "Releasing" << std::endl;

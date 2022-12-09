@@ -189,6 +189,9 @@ void Table::update(GLfloat deltaTime) {
 	}
 	if (allToggle && !reward->GetLiving()) {
 		reward->spawn();
+		for (BounceBall* bb : bbs) {
+			bb->setToggle(false);
+		}
 	}
 	if (clear == true) {
 		clearTime = clearTime + deltaTime;

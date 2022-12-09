@@ -85,6 +85,7 @@ public:
 	void setCenter(glm::vec3 val) { this->center = val; }
 	void setRadius(GLfloat val) { this->radius = val; }
 	void setState(int val) { this->state = val; }
+	void setToggle(bool val) { this->toggle = false; }
 	void setElastic(GLfloat val) { this->elastic = val; }
 	void setHit(bool val) { this->hit = val; this->toggle = !this->toggle; }
 	//getter for imgui

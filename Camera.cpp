@@ -14,7 +14,10 @@ Camera::Camera() {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void Camera::Update() {
+void Camera::Update(GLfloat deltaTime) {
+
+
+	flipping(deltaTime);
 	// Compute camera world matrix
 	glm::mat4 world(1);
 	world[3][2] = Distance;

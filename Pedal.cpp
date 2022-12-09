@@ -22,8 +22,8 @@ Pedal::Pedal(glm::vec3 initPos, GLfloat initSpin,bool flip)
 	//glm::vec3 pos2 = glm::vec3(this->massCenter.x, this->massCenter.y, this->massCenter.z + 2);
 	//glm::vec3 pos3 = this->points[32];
 	//glm::vec3 norm = glm::normalize(glm::cross(pos2 - pos1, pos3 - pos1));
-	this->colliders.push_back(new Collider(0.3, this->massCenter, this->points[32]));
-	this->colliders.push_back(new Collider(0.3, this->rightMassCenter, this->points[32]));
+	this->colliders.push_back(new Collider(0.8, this->massCenter, this->points[32]));
+	this->colliders.push_back(new Collider(0.8, this->rightMassCenter, this->points[32]));
 	//rendering set up
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBOvertex);

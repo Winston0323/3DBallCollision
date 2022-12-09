@@ -47,6 +47,7 @@ public:
 	GLfloat GetRadius()		{ return this->radius; }
 	Collider* GetCollider() { return this->collider; }
 	bool GetLiving() { return this->living; }
+	bool GetRewardHit() { return this->living && this->collider->GetHit(); }
 
 	//getter for imgui
 	GLfloat* getOriginX()	{ return &this->origin.x; }

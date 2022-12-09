@@ -53,6 +53,7 @@ public:
 	GLfloat* getMass();
 	GLfloat* getGravMult();
 	void setGravMult(GLfloat val) { this->gravMult = val; }
+	void setColor(glm::vec3 val) { this->sphere->changeColor(val); }
 	void setVelocityX(GLfloat val) { 
 		this->velocity = glm::vec3(-val, 0, 0); }
 	GLfloat* getAirResist();

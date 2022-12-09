@@ -18,7 +18,7 @@ private:
 	bool clear = false;
 	bool allToggle = false;
 	GLfloat clearTime = 0.0f;
-	GLfloat clearLimit = 5.0f;
+	GLfloat clearLimit = 15.0f;
 	GLfloat size;
 	GLfloat width;
 	GLfloat length;
@@ -58,6 +58,7 @@ public:
 	std::vector<Plain*> getPlains() { return this->plains; }
 	std::vector<Collider*> getCollider() { return this->colliders; }
 	std::vector<BounceBall*> getBounceBalls() { return this->bbs; }
+	bool rewardStatus() { return this->reward->GetRewardHit(); }
 	Pedal* getPedalLeft() { return this->pedalLeft; }
 	Pedal* getPedalRight() { return this->pedalRight; }
 	GLfloat GetClearTime() { return this->clearTime; }

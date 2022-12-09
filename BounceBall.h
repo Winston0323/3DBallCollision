@@ -32,6 +32,7 @@ public:
 	//getters
 	glm::vec3 GetOrigin()	{ return origin; }
 	bool GetToggle()	{ return this->toggle; }
+	void setToggle(bool val)	{ this->collider->setToggle(val); }
 	GLfloat GetElastic()	{ return this->elastic; }
 	GLfloat GetRadius()		{ return this->radius; }
 	Collider* GetCollider() { return this->collider; }
